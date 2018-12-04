@@ -168,9 +168,11 @@ const parseGrid = cb => {
   }
 }
 
-const render = (matches) => {
-
+const clearCanvas = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
+}
+
+const render = (matches) => {
 
   parseGrid((row, col, value) => {
 
@@ -186,6 +188,8 @@ const render = (matches) => {
  * @return Object Array containing tiles that have been swapped when they have finished swapping. The array is empty at all other times
  */
 const swapTiles = () => {
+
+  // bail if tiles aren't currently being swapped
   if (!swappingTiles.length) {
     return swappedTiles;
   }
@@ -279,6 +283,12 @@ const getMatches = (shouldGetMatches) => {
   return matches
 }
 
+/**
+ * Remove tiles from the grid
+ *
+ * @param  {Object} list list of tiles that need to be removed
+ * @return {void}
+ */
 const removeTiles = list => {
   list.forEach(match => {
     grid[match.row][match.col] = null
@@ -310,7 +320,6 @@ const dropTiles = () => {
 
   parseGrid((row, col, value) => {
     //swap the tile in a cell with the cell below, if the cell below doesn't contain a tile
-    // if (cellExists(row + 1, col) && grid[row + 1][col] === null) {
     if (tileInCell(row, col) && cellExists(row + 1, col) && !tileInCell(row + 1, col)) {
       [ grid[row][col], grid[row + 1][col] ] = [ grid[row + 1][col], grid[row][col] ]
     }
@@ -320,7 +329,6 @@ const dropTiles = () => {
 
   const emptyCellsStillBelowTiles = grid.some((val, row) => {
     return grid[row].some((val, col) => {
-      // return cellExists(row + 1, col) && grid[row + 1][col] === null && grid[row][col] !== null
       return tileInCell(row, col) && cellExists(row + 1, col) && !tileInCell(row + 1, col)
     })
   })
@@ -344,6 +352,8 @@ const fillEmptyCells = () => {
 }
 
 const main = () => {
+  requestAnimationFrame(main)
+  clearCanvas()
   swapTiles()
   const tilesDidMove = updateTiles()
   const matches = getMatches(!tilesDidMove)
@@ -351,7 +361,6 @@ const main = () => {
   dropTiles()
   fillEmptyCells()
   render(matches)
-  requestAnimationFrame(main)
 }
 
 init()
