@@ -233,11 +233,11 @@ const cellExists = (row, col) => {
 }
 
 const tileInCell = (row, col) => {
-  return grid[row][col] !== null
+  return cellExists(row, col) && grid[row][col] !== null
 }
 
 const getCellValue = (row, col) => {
-  return grid[row][col].value
+  return tileInCell(row, col) ? grid[row][col].value : -1
 }
 
 const tilesBeingSwapped = () => {
@@ -258,35 +258,20 @@ const getMatches = (shouldGetMatches) => {
 
     if (map[row][col] === 1 && grid[row][col] !== null) {
 
-      if (((cellExists(row, col + 1)) &&
-           (cellAllowedTile(row, col + 1)) &&
-           (tileInCell(row, col + 1)) &&
-           (getCellValue(row, col + 1) === getCellValue(row, col))) &&
-          ((cellExists(row, col + 2)) &&
-           (cellAllowedTile(row, col + 2)) &&
-           (tileInCell(row, col + 2)) &&
-           (getCellValue(row, col + 2) === getCellValue(row, col)))
-          ) {
-
-        matches.push([row, col])
-        matches.push([row, col + 1])
-        matches.push([row, col + 2])
+      //check horizontal
+      if ((getCellValue(row, col + 1) > -1 && getCellValue(row, col + 1) === getCellValue(row, col)) &&
+          (getCellValue(row, col + 2) > -1 && getCellValue(row, col + 2) === getCellValue(row, col))) {
+            matches.push([row, col])
+            matches.push([row, col + 1])
+            matches.push([row, col + 2])
       }
 
       //check vertical
-      if (((cellExists(row + 1, col)) &&
-           (cellAllowedTile(row + 1, col)) &&
-           (tileInCell(row + 1, col)) &&
-           (getCellValue(row + 1, col) === getCellValue(row, col))) &&
-          ((cellExists(row + 2, col)) &&
-           (cellAllowedTile(row + 2, col)) &&
-           (tileInCell(row + 2, col)) &&
-           (getCellValue(row + 2, col) === getCellValue(row, col)))
-          ) {
-
-        matches.push([row, col])
-        matches.push([row + 1, col])
-        matches.push([row + 2, col])
+      if ((getCellValue(row + 1, col) > -1 && getCellValue(row + 1, col) === getCellValue(row, col)) &&
+          (getCellValue(row + 2, col) > -1 && getCellValue(row + 2, col) === getCellValue(row, col))) {
+            matches.push([row, col])
+            matches.push([row + 1, col])
+            matches.push([row + 2, col])
       }
     }
   })
