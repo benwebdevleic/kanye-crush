@@ -1,3 +1,5 @@
+import { easeInQuad } from './utils'
+
 class Tile {
   constructor(value, x, y, w, h, img) {
     this.x = x
@@ -41,10 +43,48 @@ class Tile {
   }
 
   render(ctx) {
-    if (this.img === undefined) {
-      debugger;
-    }
     ctx.drawImage(this.img, this.x, this.y, this.w, this.h)
+  }
+
+  getUpdatedAnimationPosition(start, end, duration, startSwapTime) {
+
+    let now = Date.now()
+
+    return easeInQuad(now - startSwapTime, start, end - start, duration)
+  }
+
+  /**
+   * Move the tile
+   *
+   * Changes the x and y values based on the direction of movement
+   * and the amount of time that's passed since the animation started
+   *
+   * @return void
+   */
+  move(tileFrom, tileTo, duration, startSwapTime) {
+
+    const bufferHeight = this.h * 9
+
+    let tileXStart = tileFrom.col * this.w
+    let tileXEnd = tileTo.col * this.w
+
+    let tileYStart = tileFrom.row * this.h - bufferHeight
+    let tileYEnd = tileTo.row * this.h - bufferHeight
+
+    let tilex = this.getUpdatedAnimationPosition(tileXStart, tileXEnd, duration, startSwapTime)
+    let tiley = this.getUpdatedAnimationPosition(tileYStart, tileYEnd, duration, startSwapTime)
+
+    if (tileXEnd > tileXStart) {
+      this.x = Math.min(tilex, tileXEnd)
+    } else {
+      this.x = Math.max(tilex, tileXEnd)
+    }
+
+    if (tileYEnd > tileYStart) {
+      this.y = Math.min(tiley, tileYEnd)
+    } else {
+      this.y = Math.max(tiley, tileYEnd)
+    }
   }
 }
 
