@@ -244,10 +244,6 @@ const tilesBeingSwapped = () => {
   return swappingTiles.length > 0
 }
 
-const shouldGetMatches = () => {
-  return true
-}
-
 const getMatches = (shouldGetMatches) => {
 
   let matches = []
