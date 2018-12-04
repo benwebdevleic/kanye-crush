@@ -261,17 +261,17 @@ const getMatches = (shouldGetMatches) => {
       //check horizontal
       if ((getCellValue(row, col + 1) > -1 && getCellValue(row, col + 1) === getCellValue(row, col)) &&
           (getCellValue(row, col + 2) > -1 && getCellValue(row, col + 2) === getCellValue(row, col))) {
-            matches.push([row, col])
-            matches.push([row, col + 1])
-            matches.push([row, col + 2])
+            matches.push({ row: row, col: col })
+            matches.push({ row: row, col: col + 1 })
+            matches.push({ row: row, col: col + 2 })
       }
 
       //check vertical
       if ((getCellValue(row + 1, col) > -1 && getCellValue(row + 1, col) === getCellValue(row, col)) &&
           (getCellValue(row + 2, col) > -1 && getCellValue(row + 2, col) === getCellValue(row, col))) {
-            matches.push([row, col])
-            matches.push([row + 1, col])
-            matches.push([row + 2, col])
+            matches.push({ row: row, col: col })
+            matches.push({ row: row + 1, col: col })
+            matches.push({ row: row + 2, col: col })
       }
     }
   })
@@ -280,15 +280,9 @@ const getMatches = (shouldGetMatches) => {
 }
 
 const removeTiles = list => {
-  let i;
-  for (i = 0; i < list.length; i += 1) {
-
-    grid[list[i][0]][list[i][1]] = null
-  }
-
-  if (list.length) {
-    sendEvent("tilesremoved", list)
-  }
+  list.forEach(match => {
+    grid[match.row][match.col] = null
+  })
 }
 
 const updateTiles = () => {
