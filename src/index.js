@@ -147,7 +147,20 @@ const init = () => {
 
   preloadImages(imageURLs, (loadedImages) => {
     tileImages = loadedImages
+
+    // create a grid of tiles
     createGrid(map)
+
+    // remove matches generated when the grid is first created
+    let matches = getMatches(true)
+    while(matches.length) {
+      removeTiles(matches)
+      dropTiles()
+      fillEmptyCells()
+      updateTiles(false)
+      matches = getMatches(true)
+    }
+
     main()
   })
 }
@@ -295,7 +308,7 @@ const removeTiles = list => {
   })
 }
 
-const updateTiles = () => {
+const updateTiles = (shouldAnimate) => {
   if (tilesBeingSwapped()) {
     return
   }
@@ -305,7 +318,7 @@ const updateTiles = () => {
   parseGrid((row, col, value) => {
     if ((map[row][col] === -1 || cellAllowedTile(row, col)) && tileInCell(row, col)) {
 
-      const tileMoved = grid[row][col].update(row, col, cellSize, gravity)
+      const tileMoved = grid[row][col].updatePosition(row, col, gravity, shouldAnimate)
 
       if (!tilesDidMove && tileMoved) {
         tilesDidMove = true
@@ -355,7 +368,7 @@ const main = () => {
   requestAnimationFrame(main)
   clearCanvas()
   swapTiles()
-  const tilesDidMove = updateTiles()
+  const tilesDidMove = updateTiles(true)
   const matches = getMatches(!tilesDidMove)
   removeTiles(matches)
   dropTiles()
