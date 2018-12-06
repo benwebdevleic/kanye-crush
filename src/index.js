@@ -25,7 +25,7 @@ var startSwapTime = null;
 var bufferRowCount
 var bufferHeight
 
-const chooseRandomTileValue = () => Math.floor(Math.random() * 4)
+const chooseRandomTileValue = () => Math.floor(Math.random() * 6)
 
 const createGrid = (cellMap) => {
 
@@ -143,6 +143,8 @@ const init = () => {
     './img/cage.jpg',
     './img/murray.jpg',
     './img/seagal.jpg',
+    './img/bear.jpeg',
+    './img/beard.jpeg',
   ]
 
   preloadImages(imageURLs, (loadedImages) => {
