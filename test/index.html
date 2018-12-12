@@ -10,6 +10,11 @@
         border: 2px solid #000;
       }
 
+      #game-over {
+        position: fixed;
+        display: none;
+      }
+
     </style>
 
   </head>
@@ -19,6 +24,11 @@
 
     <div id="moves">Moves: <span id="moves-value"></span></div>
     <div id="score">Score: <span id="score-value">0</span></div>
+
+    <div id="game-over">
+      <h2>Game over</h2>
+      <button id="btn-reset">Play again</button>
+    </div>
 
     <script src="../dist/index.js"></script>
 

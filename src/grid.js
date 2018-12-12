@@ -93,6 +93,22 @@ const render = (matches) => {
   })
 }
 
+/**
+ * Remove matches generated when the grid is first created
+ *
+ * @return {void}
+ */
+const clearNonUserMatches = () => {
+  let matches = getMatches(true)
+  while(matches.length) {
+    removeTiles(matches)
+    dropTiles()
+    fillEmptyCells()
+    updateTiles(false)
+    matches = getMatches(true)
+  }
+}
+
 const init = (cb) => {
 
   let i;
@@ -124,15 +140,8 @@ const init = (cb) => {
     // create a grid of tiles
     createGrid(map)
 
-    // remove matches generated when the grid is first created
-    let matches = getMatches(true)
-    while(matches.length) {
-      removeTiles(matches)
-      dropTiles()
-      fillEmptyCells()
-      updateTiles(false)
-      matches = getMatches(true)
-    }
+    // clear matches accidentally created
+    clearNonUserMatches()
 
     cb()
   })
@@ -377,8 +386,15 @@ const update = () => {
   render(matches)
 }
 
+const reset = () => {
+  grid.length = 0
+  createGrid(map)
+  clearNonUserMatches()
+}
+
 export {
   init,
   update,
   render,
+  reset,
 }
