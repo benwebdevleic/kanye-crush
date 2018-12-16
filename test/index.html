@@ -2,12 +2,46 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Kanye Crush</title>
 
     <style>
 
+      html {
+        height: 100%;
+      }
+
+      body {
+          margin: 0;
+          text-align: center;
+          height: 100%;
+          /*background-image: url(./img/abstract-art-astronomy-287005.jpg);
+          background-repeat: no-repeat;
+          background-size: auto 100vh;*/
+          background-color: #222;
+      }
+
+      header {
+        height: 210px;
+        background-color: darkgoldenrod;
+        margin-bottom: 78px;
+      }
+
+      #kanye-face {
+        width: 200px;
+        height: auto;
+      }
+
       canvas {
-        border: 2px solid #000;
+        /*border: 2px solid #000;*/
+      }
+
+      .component {
+
+      }
+
+      .component-player {
+        display: flex;
       }
 
       #game-over {
@@ -15,15 +49,35 @@
         display: none;
       }
 
+      button {
+        line-height: 44px;
+        border: none;
+        background-color: darkgoldenrod;
+      }
+
     </style>
 
   </head>
   <body>
 
+    <header>
+      <img src="./img/kanye.svg" id="kanye-face">
+    </header>
+
     <canvas id="grid" width="500" height="500"></canvas>
 
-    <div id="moves">Moves: <span id="moves-value"></span></div>
-    <div id="score">Score: <span id="score-value">0</span></div>
+    <div class="component component-player">
+
+      <div id="moves">
+        <span class="label">Moves:</span>
+        <span id="moves-value"></span>
+      </div>
+      <div id="score">
+        <span class="label">Score:</span>
+        <span id="score-value"></span>
+      </div>
+
+    </div>
 
     <div id="game-over">
       <h2>Game over</h2>

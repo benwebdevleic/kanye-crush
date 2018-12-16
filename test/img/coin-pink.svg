@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="128"
+   height="128"
+   viewBox="0 0 128 128"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="coin-pink.svg"
+   inkscape:export-filename="/home/ben/projects/kanye-crush/test/img/coin-pink.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="4.9884174"
+     inkscape:cx="51.327498"
+     inkscape:cy="58.015534"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="1855"
+     inkscape:window-height="1056"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-924.36216)">
+    <ellipse
+       style="fill:#e18df6;fill-opacity:1;stroke:none;stroke-width:40;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path4136"
+       cx="64.212624"
+       cy="988.50391"
+       rx="44.119568"
+       ry="43.973476" />
+    <g
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#e122f6;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="text4742"
+       transform="matrix(0.68708555,0,0,0.68708555,20.093057,309.31715)">
+      <path
+         d="m 68.13419,1023.5142 q 6.896972,-0.6104 10.498046,-3.9673 3.66211,-3.357 3.66211,-9.1553 0,-5.249 -3.601074,-8.9111 -3.601075,-3.66214 -10.559082,-5.55423 l 0,27.58793 z m -6.103516,-68.29838 q -6.286621,0.42725 -9.765625,3.66211 -3.479004,3.17383 -3.479004,8.54492 0,4.88281 3.173828,8.11768 3.234863,3.23486 10.070801,5.24902 l 0,-25.57373 z m -25.268555,68.05418 0,-16.8457 6.591797,0 q 0.244141,8.3618 4.882813,12.6343 4.638672,4.2725 13.793945,4.4556 l 0,-29.60209 q -14.038086,-3.90625 -19.714355,-8.97217 -5.67627,-5.12695 -5.67627,-13.5498 0,-9.76563 6.713867,-15.68604 6.713867,-5.92041 18.676758,-6.65283 l 0,-16.35742 6.103516,0 0,16.35742 q 6.16455,0.48828 11.84082,2.01416 5.737305,1.46484 11.169434,3.96728 l 0,15.99122 -6.652833,0 q -0.732421,-7.08008 -4.943847,-11.16944 -4.211426,-4.08935 -11.413574,-4.63867 l 0,27.58789 q 15.014648,4.08936 20.996093,9.39941 6.042481,5.24903 6.042481,14.09908 0,10.1319 -7.080078,16.2354 -7.080078,6.1035 -19.958496,7.019 l 0,16.4795 -6.103516,0 0,-16.4795 q -5.859375,-0.122 -12.145996,-1.7089 -6.286621,-1.5259 -13.122559,-4.5777 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:125px;font-family:serif;-inkscape-font-specification:serif;fill:#e122f6;fill-opacity:1"
+         id="path4766"
+         inkscape:connector-curvature="0" />
+    </g>
+  </g>
+</svg>

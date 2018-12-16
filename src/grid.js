@@ -126,12 +126,12 @@ const init = (cb) => {
   canvas.addEventListener("mouseup", handleMouseUp)
 
   const imageURLs = [
-    './img/kitten.jpeg',
-    './img/cage.jpg',
-    './img/murray.jpg',
-    './img/seagal.jpg',
-    './img/bear.jpeg',
-    './img/beard.jpeg',
+    './img/coin-gold.png',
+    './img/coin-silver.png',
+    './img/coin-bronze.png',
+    './img/coin-pink.png',
+    './img/coin-green.png',
+    './img/coin-red.png',
   ]
 
   preloadImages(imageURLs, (loadedImages) => {
