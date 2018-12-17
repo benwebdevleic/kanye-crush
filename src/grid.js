@@ -26,6 +26,15 @@ var startSwapTime = null;
 var bufferRowCount
 var bufferHeight
 
+/**
+ * Handle the mousemove event
+ *
+ * If the user has the mouse button down and moves the mouse over another tile,
+ * trigger the swap of the two tiles
+ *
+ * @param  {Object} event
+ * @return {void}
+ */
 const handleMouseMove = function(event) {
   if (dragging) {
 
@@ -49,6 +58,14 @@ const handleMouseMove = function(event) {
     }
 }
 
+/**
+ * Handler for the mouse button being pressed
+ *
+ * Capture which cell the mouse pointer is over when the button is pressed
+ *
+ * @param  {Object} event
+ * @return {void}
+ */
 const handleMouseDown = function(event) {
   dragging = true
 
@@ -63,10 +80,25 @@ const handleMouseDown = function(event) {
   draggingTile.col = Math.floor(dragStartX / cellSize)
 }
 
+
+/**
+ * Handler for when the mouse button is released
+ *
+ * Cancel the action of the user dragging the mouse
+ *
+ * @param  {Object} event
+ * @return {void}
+ */
 const handleMouseUp = function(event) {
   dragging = false
 }
 
+/**
+ * Iterate through every cell in the grid
+ *
+ * @param  {Function} cb Callback function that's fired for every cell
+ * @return {void}
+ */
 const parseGrid = cb => {
 
   let row;
@@ -83,6 +115,12 @@ const parseGrid = cb => {
   }
 }
 
+/**
+ * Render the grid
+ *
+ * @param  {Array} matches List of tiles
+ * @return {void}
+ */
 const render = (matches) => {
 
   parseGrid((row, col, value) => {
@@ -109,6 +147,14 @@ const clearNonUserMatches = () => {
   }
 }
 
+/**
+ * Initialise the grid.
+ *
+ * Creates the grid, preloads images and binds mouse events.
+ *
+ * @param  {Function} cb Callback function that's called when the grid has been initialised
+ * @return {void}
+ */
 const init = (cb) => {
 
   let i;
@@ -147,6 +193,11 @@ const init = (cb) => {
   })
 }
 
+/**
+ * Clear the canvas element
+ *
+ * @return {void}
+ */
 const clearCanvas = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
 }
@@ -193,30 +244,80 @@ const swapTiles = () => {
   }
 }
 
+/**
+ * Determines whether or not a cell in the environment is a buffer cell
+ *
+ * @param  {Number}  row The row in the environment grid
+ * @param  {Number}  col The column in the environment grid
+ * @return {Boolean}
+ */
 const isBufferCell = (row, col) => {
   return map[row][col] === -1
 }
 
+/**
+ * Is a cell in the environment allowed to have a tile
+ *
+ * @param  {Number}  row The row in the environment grid
+ * @param  {Number}  col The column in the environment grid
+ * @return {Boolean}
+ */
 const cellAllowedTile = (row, col) => {
   return map[row][col] === 1
 }
 
+/**
+ * Determine whether or not there's a cell at a location in the environment grid
+ *
+ * @param  {Number}  row The row in the environment grid
+ * @param  {Number}  col The column in the environment grid
+ * @return {Boolean}
+ */
 const cellExists = (row, col) => {
-  return row < grid.length && col < grid[row].length
+  return row > -1 && row < grid.length && col > -1 && col < grid[row].length
 }
 
+/**
+ * Determine whether or not there's a tile in a cell
+ *
+ * @param  {Number}  row The row in the environment grid
+ * @param  {Number}  col The column in the environment grid
+ * @return {Boolean}
+ */
 const tileInCell = (row, col) => {
   return cellExists(row, col) && grid[row][col] !== null
 }
 
+/**
+ * Get the value of a tile, if the cell contains a tile
+ *
+ * @param  {Number}  row The row in the environment grid
+ * @param  {Number}  col The column in the environment grid
+ * @return {Number}  Return the value of the tile if it exists, or return -1 if the cell is empty
+ */
 const getCellValue = (row, col) => {
   return tileInCell(row, col) ? grid[row][col].value : -1
 }
 
+/**
+ * Determine whether or not tiles are currently being swapped
+ *
+ * @return {Boolean}
+ */
 const tilesBeingSwapped = () => {
   return swappingTiles.length > 0
 }
 
+/**
+ * Get matching tiles.
+ *
+ * Tiles match when 3 or more tiles of the same value
+ * are found in a row or column
+ *
+ * @param  {Boolean} shouldGetMatches Should matches be found? Shouldn't check
+ * for matches while tiles are still falling
+ * @return {Array} List of cell co-ordinates for matching tiles
+ */
 const getMatches = (shouldGetMatches) => {
 
   let matches = []
@@ -267,6 +368,13 @@ const removeTiles = list => {
   }
 }
 
+/**
+ * Tell all tiles to update and then return if any of the tiles dropped at all
+ *
+ * @param  {Boolean} shouldAnimate If shouldAnimate, tiles should be allowed to
+ * drop based on forces applied. If not, tiles should snap directly to their destination
+ * @return {Boolean}  Did any of the tiles move?
+ */
 const updateTiles = (shouldAnimate) => {
   if (tilesBeingSwapped()) {
     return
@@ -288,6 +396,15 @@ const updateTiles = (shouldAnimate) => {
   return tilesDidMove
 }
 
+/**
+ * Move the tiles down in the grid
+ *
+ * Doesn't handle animation - this moves the tile data in the grid
+ *
+ * Recurrs until tiles have all dropped as low as they can go
+ *
+ * @return {void}
+ */
 const dropTiles = () => {
 
   parseGrid((row, col, value) => {
@@ -310,6 +427,11 @@ const dropTiles = () => {
   }
 }
 
+/**
+ * Backfill empty cells in the buffer with tiles
+ *
+ * @return {void}
+ */
 const fillEmptyCells = () => {
   parseGrid((row, col, value) => {
     if (isBufferCell(row, col) && !tileInCell(row, col)) {
@@ -323,6 +445,12 @@ const fillEmptyCells = () => {
   })
 }
 
+/**
+ * Create the grid and fill it with tiles
+ *
+ * @param  {Array} cellMap The environment in which the grid should be created
+ * @return {void}
+ */
 const createGrid = (cellMap) => {
 
   let i
@@ -373,8 +501,55 @@ const createGrid = (cellMap) => {
   }
 }
 
+/**
+ * Choose a number at random between 0 and the number of tiles used minus 1
+ *
+ * @return {Number}
+ */
 const chooseRandomTileValue = () => Math.floor(Math.random() * 6)
 
+const countAvailableMoves = () => {
+  let count = 0
+
+  const directions = [
+    { row: -1, col: 0 },
+    { row: 1, col: 0 },
+    { row : 0, col: 1 },
+    { row: 0, col: -1 }
+  ]
+
+  parseGrid((row, col, value) => {
+
+    directions.forEach(direction => {
+
+      if (tileInCell(row + direction.row, col + direction.col)) {
+
+        // swap the tiles
+        [ grid[row][col], grid[row + direction.row][col + direction.col] ] = [ grid[row + direction.row ][col + direction.col], grid[row][col] ]
+
+        // increment the number of available moves if matches are found
+        let matches = getMatches(true)
+        if (matches.length) {
+          count += 1
+        }
+
+        // swap the tiles again to return them to their original position
+        [ grid[row][col], grid[row + direction.row][col + direction.col] ] = [ grid[row + direction.row ][col + direction.col], grid[row][col] ]
+      }
+    })
+  })
+
+  // each swapping is counted twice, so return half the number found
+  return count / 2
+}
+
+/**
+ * Determine the current state of the grid and render
+ *
+ * TODO refactor this to not render, this should only update
+ *
+ * @return {[type]} [description]
+ */
 const update = () => {
   clearCanvas()
   swapTiles()
@@ -397,4 +572,5 @@ export {
   update,
   render,
   reset,
+  countAvailableMoves,
 }
