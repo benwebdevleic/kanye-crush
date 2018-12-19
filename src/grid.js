@@ -118,10 +118,9 @@ const parseGrid = cb => {
 /**
  * Render the grid
  *
- * @param  {Array} matches List of tiles
  * @return {void}
  */
-const render = (matches) => {
+const render = () => {
 
   parseGrid((row, col, value) => {
 
@@ -546,8 +545,6 @@ const countAvailableMoves = () => {
 /**
  * Determine the current state of the grid and render
  *
- * TODO refactor this to not render, this should only update
- *
  * @return {[type]} [description]
  */
 const update = () => {
@@ -558,7 +555,6 @@ const update = () => {
   removeTiles(matches)
   dropTiles()
   fillEmptyCells()
-  render(matches)
 }
 
 const reset = () => {
