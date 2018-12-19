@@ -26,6 +26,8 @@ var startSwapTime = null;
 var bufferRowCount
 var bufferHeight
 
+var matches = []
+
 /**
  * Handle the mousemove event
  *
@@ -210,8 +212,10 @@ const swapTiles = () => {
 
   // bail if tiles aren't currently being swapped
   if (!swappingTiles.length) {
-    return swappedTiles;
+    return
   }
+
+  let tiles = swappingTiles
 
   // capture the current time because the tiles need to know when the
   // animation was triggered
@@ -221,8 +225,57 @@ const swapTiles = () => {
 
   const duration = 200
 
-  grid[swappingTiles[0].row][swappingTiles[0].col].move(swappingTiles[0], swappingTiles[1], duration, startSwapTime)
-  grid[swappingTiles[1].row][swappingTiles[1].col].move(swappingTiles[1], swappingTiles[0], duration, startSwapTime)
+  grid[tiles[0].row][tiles[0].col].move(tiles[0], tiles[1], duration, startSwapTime)
+  grid[tiles[1].row][tiles[1].col].move(tiles[1], tiles[0], duration, startSwapTime)
+
+  let now = Date.now()
+
+  // has the duration of animation now passed?
+  if (now - startSwapTime >= duration) {
+
+    // debugger
+
+    // Yes! The tile has reached its destination
+
+    // swap the tile data over in the grid
+    [grid[tiles[0].row][tiles[0].col], grid[tiles[1].row][tiles[1].col]] = [grid[tiles[1].row][tiles[1].col], grid[tiles[0].row][tiles[0].col] ]
+
+    // store which tiles swapped incase they need to be swapped back
+    swappedTiles = Object.assign([], tiles)
+
+    // clear the time that the animation was triggered
+    startSwapTime = null;
+
+    // clear the swapping tiles
+    swappingTiles.length = 0
+  }
+}
+
+const swapTilesBack = () => {
+
+  // if tiles have just been swapped, but no matches were found, forget that
+  // tiles were just swapped
+  if (swappedTiles.length && matches.length) {
+    swappedTiles.length = 0
+  }
+
+  // bail if no tiles have just been swapped
+  if (!swappedTiles.length) {
+    return
+  }
+
+  let tiles = swappedTiles
+
+  // capture the current time because the tiles need to know when the
+  // animation was triggered
+  if (startSwapTime === null) {
+    startSwapTime = Date.now()
+  }
+
+  const duration = 200
+
+  grid[tiles[0].row][tiles[0].col].move(tiles[0], tiles[1], duration, startSwapTime)
+  grid[tiles[1].row][tiles[1].col].move(tiles[1], tiles[0], duration, startSwapTime)
 
   let now = Date.now()
 
@@ -232,14 +285,13 @@ const swapTiles = () => {
     // Yes! The tile has reached its destination
 
     // swap the tile data over in the grid
-    [grid[swappingTiles[0].row][swappingTiles[0].col], grid[swappingTiles[1].row][swappingTiles[1].col]] = [grid[swappingTiles[1].row][swappingTiles[1].col], grid[swappingTiles[0].row][swappingTiles[0].col] ]
-    swappedTiles = Object.assign([], swappingTiles)
+    [grid[tiles[0].row][tiles[0].col], grid[tiles[1].row][tiles[1].col]] = [grid[tiles[1].row][tiles[1].col], grid[tiles[0].row][tiles[0].col] ]
 
     // clear the time that the animation was triggered
     startSwapTime = null;
 
     // clear the swapping tiles
-    swappingTiles.length = 0
+    swappedTiles.length = 0
   }
 }
 
@@ -551,7 +603,8 @@ const update = () => {
   clearCanvas()
   swapTiles()
   const tilesDidMove = updateTiles(true)
-  const matches = getMatches(!tilesDidMove)
+  matches = getMatches(!tilesDidMove)
+  swapTilesBack()
   removeTiles(matches)
   dropTiles()
   fillEmptyCells()
