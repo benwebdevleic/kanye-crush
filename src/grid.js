@@ -233,8 +233,6 @@ const swapTiles = () => {
   // has the duration of animation now passed?
   if (now - startSwapTime >= duration) {
 
-    // debugger
-
     // Yes! The tile has reached its destination
 
     // swap the tile data over in the grid
