@@ -55,7 +55,7 @@ const handleMouseMove = function(event) {
         swappingTiles.push({ row: draggingTile.row, col: draggingTile.col })
         swappingTiles.push({ row: cellRow, col: cellCol })
 
-        sendEvent('movemade')
+        // sendEvent('movemade')
       }
     }
 }
@@ -146,6 +146,7 @@ const clearNonUserMatches = () => {
     updateTiles(false)
     matches = getMatches(true)
   }
+  sendEvent('resetscore')
 }
 
 /**
@@ -251,7 +252,7 @@ const swapTiles = () => {
 
 const swapTilesBack = () => {
 
-  // if tiles have just been swapped, but no matches were found, forget that
+  // if tiles have just been swapped, but matches were found, forget that
   // tiles were just swapped
   if (swappedTiles.length && matches.length) {
     swappedTiles.length = 0
@@ -290,6 +291,14 @@ const swapTilesBack = () => {
 
     // clear the swapping tiles
     swappedTiles.length = 0
+  }
+}
+
+const updateScore = () => {
+  // if tiles have just been swapped and matches were found, send an event to
+  // state that a valid move was made
+  if (swappedTiles.length && matches.length) {
+    sendEvent('movemade')
   }
 }
 
@@ -432,7 +441,7 @@ const updateTiles = (shouldAnimate) => {
   let tilesDidMove = false
 
   parseGrid((row, col, value) => {
-    if ((map[row][col] === -1 || cellAllowedTile(row, col)) && tileInCell(row, col)) {
+    if ((isBufferCell(row, col) || cellAllowedTile(row, col)) && tileInCell(row, col)) {
 
       const tileMoved = grid[row][col].updatePosition(row, col, gravity, shouldAnimate)
 
@@ -602,6 +611,7 @@ const update = () => {
   swapTiles()
   const tilesDidMove = updateTiles(true)
   matches = getMatches(!tilesDidMove)
+  updateScore()
   swapTilesBack()
   removeTiles(matches)
   dropTiles()

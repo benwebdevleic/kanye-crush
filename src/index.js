@@ -49,9 +49,15 @@ const main = () => {
   gameOver()
 }
 
+const resetScore = () => {
+  score = defaultScore
+  ui.score.innerHTML = score
+}
+
 const init = () => {
   bindEvent('tilesremoved', handleTilesRemoved)
   bindEvent('movemade', handleMoveMade)
+  bindEvent('resetscore', resetScore)
   ui.score.innerHTML = score
   ui.moves.innerHTML = moves
   ui.btnReset.addEventListener('click', handleBtnReset)
