@@ -44,12 +44,18 @@
         z-index: 1;
       }
 
-      canvas {
+      #grid {
         width: calc(100% - 40px);
         height: auto;
         margin-left: 20px;
         margin-right: 20px;
         background-color: #333;
+      }
+
+      @media screen and (min-width: 540px) {
+        #grid {
+          width: 500px;
+        }
       }
 
       .component-player {
@@ -68,13 +74,15 @@
         outline: none;
       }
 
-      .multi-column {
-        display: flex;
-        width: 100%;
-      }
+      @media screen and (max-width: 992px) {
+        .multi-column.tablet-and-smaller {
+          display: flex;
+          width: 100%;
+        }
 
-      .multi-column.columns-3 > .column {
-        flex: 0 0 33.3%;
+        .multi-column.tablet-and-smaller.columns-3 > .column {
+          flex: 0 0 33.3%;
+        }
       }
 
       .multi-column.align-center {
@@ -119,6 +127,12 @@
         min-height: 200px;
       }
 
+      @media screen and (min-width: 540px) {
+        .modal-content {
+          flex: 0 0 300px;
+        }
+      }
+
       #game-state-containers {
         display: none;
       }
@@ -143,6 +157,18 @@
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6f8f9', endColorstr='#f5f7f9',GradientType=0 ); /* IE6-9 */
       }
 
+      @media screen and (min-width: 992px) {
+        #player-info {
+          width: 300px;
+          height: 500px;
+          border-radius: 0;
+        }
+
+        #player-info .column {
+          margin-top: 8px;
+        }
+      }
+
       .player-info-component {
         background-color: #333;
         line-height: 44px;
@@ -163,34 +189,54 @@
         align-items: center;
       }
 
+      @media screen and (min-width: 992px) {
+        .canvas-container {
+          position: static;
+          width: 500px;
+        }
+      }
+
+      @media screen and (min-width: 992px) {
+        .wrapper {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100%;
+        }
+      }
+
     </style>
 
   </head>
   <body>
 
-    <div class="multi-column columns-3 align-center" id="player-info">
-      <div class="column">
-        <div class="player-info-component">
-          <span class="label">Score:</span>
-          <span id="score-value"></span>
-        </div>
-      </div>
-      <div class="column">
-        <div class="player-info-component">
-          <span class="label">Moves:</span>
-          <span id="moves-value"></span>
-        </div>
-      </div>
-      <div class="column">
-        <div class="player-info-component">
-          <span class="label">Target:</span>
-          <span id="target-value"></span>
-        </div>
-      </div>
-    </div>
+    <div class="wrapper">
 
-    <div class="canvas-container">
-      <canvas id="grid" width="500" height="500"></canvas>
+      <div class="multi-column columns-3 align-center tablet-and-smaller" id="player-info">
+        <div class="column">
+          <div class="player-info-component">
+            <span class="label">Score:</span>
+            <span id="score-value"></span>
+          </div>
+        </div>
+        <div class="column">
+          <div class="player-info-component">
+            <span class="label">Moves:</span>
+            <span id="moves-value"></span>
+          </div>
+        </div>
+        <div class="column">
+          <div class="player-info-component">
+            <span class="label">Target:</span>
+            <span id="target-value"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="canvas-container">
+        <canvas id="grid" width="500" height="500"></canvas>
+      </div>
+
     </div>
 
     <div id="game-state-containers">
