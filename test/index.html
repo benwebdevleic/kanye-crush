@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Kanye Crush</title>
+    <link href="https://fonts.googleapis.com/css?family=Damion|Oleo+Script|Pacifico|Shrikhand" rel="stylesheet">
 
     <style>
 
@@ -205,6 +206,27 @@
         }
       }
 
+      #logo {
+        font-family: 'Pacifico', cursive;
+        font-weight: normal;
+        color: darkgoldenrod;
+        font-size: 3em;
+        line-height: 1;
+      }
+
+      #logo .first-letter {
+        font-size: 1.2em;
+      }
+
+      @media screen and (max-width: 992px) {
+        #logo {
+          position: absolute;
+          left: 20px;
+          bottom: 0;
+          font-size: 2em;
+        }
+      }
+
     </style>
 
   </head>
@@ -213,6 +235,7 @@
     <div class="wrapper">
 
       <div class="multi-column columns-3 align-center tablet-and-smaller" id="player-info">
+        <h1 id="logo"><span class="first-letter">K</span>anye <span class="first-letter">C</span>rush</h1>
         <div class="column">
           <div class="player-info-component">
             <span class="label">Score:</span>
