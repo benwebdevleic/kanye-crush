@@ -28,6 +28,28 @@ var bufferHeight
 
 var matches = []
 
+var scalingFactor = canvas.width / canvas.clientWidth
+
+const getEventCoordinates = event => {
+  let mouseX
+  let mouseY
+
+  // handle the touch event differently to the mouse event because
+  // for some reason the data is structured in a different way
+  if (event.type === "touchstart" || event.type === "touchmove") {
+    mouseX = event.touches[0].clientX - event.target.offsetLeft
+    mouseY = event.touches[0].clientY - event.target.offsetTop
+  } else {
+    mouseX = event.offsetX
+    mouseY = event.offsetY
+  }
+
+  return {
+    mouseX,
+    mouseY,
+  }
+}
+
 /**
  * Handle the mousemove event
  *
@@ -40,11 +62,10 @@ var matches = []
 const handleMouseMove = function(event) {
   if (dragging) {
 
-      const mouseX = event.offsetX
-      const mouseY = event.offsetY
+      const { mouseX, mouseY } = getEventCoordinates(event)
 
-      const cellRow = Math.floor((mouseY + bufferHeight) / cellSize)
-      const cellCol = Math.floor(mouseX / cellSize)
+      const cellRow = Math.floor(((mouseY * scalingFactor) + bufferHeight) / cellSize)
+      const cellCol = Math.floor((mouseX * scalingFactor) / cellSize)
 
       // if the mouse moves to a different tile
       if (draggingTile.row !== cellRow || draggingTile.col !== cellCol) {
@@ -71,12 +92,11 @@ const handleMouseMove = function(event) {
 const handleMouseDown = function(event) {
   dragging = true
 
-  // work out which cell the user has clicked on
-  const mouseX = event.offsetX
-  const mouseY = event.offsetY
+  const { mouseX, mouseY } = getEventCoordinates(event)
 
-  dragStartX = mouseX
-  dragStartY = mouseY
+  //scale the mouse co-ordinates to match the css scaled canvas element
+  dragStartX = mouseX * scalingFactor
+  dragStartY = mouseY * scalingFactor
 
   draggingTile.row = Math.floor((dragStartY + bufferHeight) / cellSize)
   draggingTile.col = Math.floor(dragStartX / cellSize)
@@ -165,6 +185,7 @@ const init = (cb) => {
   numRows = 9
   numColumns = 9
 
+  // cellSize = canvas.width / numColumns
   cellSize = canvas.width / numColumns
 
   bufferRowCount = numRows
@@ -172,6 +193,10 @@ const init = (cb) => {
   canvas.addEventListener("mousedown", handleMouseDown)
   canvas.addEventListener("mousemove", handleMouseMove)
   canvas.addEventListener("mouseup", handleMouseUp)
+
+  canvas.addEventListener("touchstart", handleMouseDown)
+  canvas.addEventListener("touchmove", handleMouseMove)
+  canvas.addEventListener("touchend", handleMouseUp)
 
   const imageURLs = [
     './img/coin-gold.png',

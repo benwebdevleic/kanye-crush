@@ -19,44 +19,148 @@
           background-repeat: no-repeat;
           background-size: auto 100vh;*/
           background-color: #222;
+          color: #fff;
+          overflow: hidden;
+      }
+
+      @media screen and (min-width: 480px) {
+        body {
+          font-size: 20px;
+        }
       }
 
       header {
         height: 210px;
-        background-color: darkgoldenrod;
         margin-bottom: 78px;
+        position: relative;
+        z-index: 2;
       }
 
       #kanye-face {
         width: 200px;
         height: auto;
+        position: absolute;
+        top: 0;
+        z-index: 1;
       }
 
       canvas {
-        /*border: 2px solid #000;*/
-      }
-
-      .component {
-
+        width: calc(100% - 40px);
+        height: auto;
+        margin-left: 20px;
+        margin-right: 20px;
+        background-color: #333;
       }
 
       .component-player {
         display: flex;
       }
 
-      #game-over {
-        position: fixed;
-        display: none;
-      }
-
       button {
         line-height: 44px;
         border: none;
         background-color: darkgoldenrod;
+        color: #fff;
+        padding-left: 20px;
+        padding-right: 20px;
+        border-radius: 22px;
+        font-size: 1rem;
+        outline: none;
       }
 
-      #score {
-        color: #fff
+      .multi-column {
+        display: flex;
+        width: 100%;
+      }
+
+      .multi-column.columns-3 > .column {
+        flex: 0 0 33.3%;
+      }
+
+      .multi-column.align-center {
+        align-items: center;
+      }
+
+      .modal {
+          display: none;
+      }
+
+      .modal.show {
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        padding-left: 20px;
+        padding-right: 20px;
+        box-sizing: border-box;
+        justify-content: center;
+        align-items: center;
+        animation-duration: 0.5s;
+        animation-name: fadein;
+      }
+
+      .modal-background {
+        background-color: rgba(0, 0, 0, 0.4);
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .modal-content {
+        background-color: #000;
+        border-radius: 22px;
+        flex: 0 0 100%;
+        z-index: 1;
+        min-height: 200px;
+      }
+
+      #game-state-containers {
+        display: none;
+      }
+
+      @keyframes fadein {
+        from {
+          opacity: 0
+        }
+        to {
+          opacity: 1
+        }
+      }
+
+      #player-info {
+        height: 70px;
+        border-bottom-left-radius: 22px;
+        border-bottom-right-radius: 22px;
+        background: #f6f8f9; /* Old browsers */
+        background: -moz-linear-gradient(top, #f6f8f9 0%, #e5ebee 29%, #d7dee3 63%, #f5f7f9 100%); /* FF3.6-15 */
+        background: -webkit-linear-gradient(top, #f6f8f9 0%,#e5ebee 29%,#d7dee3 63%,#f5f7f9 100%); /* Chrome10-25,Safari5.1-6 */
+        background: linear-gradient(to bottom, #f6f8f9 0%,#e5ebee 29%,#d7dee3 63%,#f5f7f9 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6f8f9', endColorstr='#f5f7f9',GradientType=0 ); /* IE6-9 */
+      }
+
+      .player-info-component {
+        background-color: #333;
+        line-height: 44px;
+        border-radius: 11px;
+        margin-left: 10px;
+        margin-right: 10px;
+        font-size: 1em;
+      }
+
+      .canvas-container {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
 
     </style>
@@ -64,28 +168,52 @@
   </head>
   <body>
 
-    <header>
-      <img src="./img/kanye.svg" id="kanye-face">
-    </header>
-
-    <canvas id="grid" width="500" height="500"></canvas>
-
-    <div class="component component-player">
-
-      <div id="moves">
-        <span class="label">Moves:</span>
-        <span id="moves-value"></span>
+    <div class="multi-column columns-3 align-center" id="player-info">
+      <div class="column">
+        <div class="player-info-component">
+          <span class="label">Score:</span>
+          <span id="score-value"></span>
+        </div>
       </div>
-      <div id="score">
-        <span class="label">Score:</span>
-        <span id="score-value"></span>
+      <div class="column">
+        <div class="player-info-component">
+          <span class="label">Moves:</span>
+          <span id="moves-value"></span>
+        </div>
+      </div>
+      <div class="column">
+        <div class="player-info-component">
+          <span class="label">Target:</span>
+          <span id="target-value"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="canvas-container">
+      <canvas id="grid" width="500" height="500"></canvas>
+    </div>
+
+    <div id="game-state-containers">
+
+      <div id="game-lose">
+        <h2>Game over</h2>
+        <button class="btn-retry">Retry</button>
+      </div>
+
+      <div id="game-win">
+        <h2>You Won!</h2>
+        <h3>Score</h3>
+        <div class="score-value"></div>
+        <button class="btn-retry">Retry</button>
+        <button>Next</button>
       </div>
 
     </div>
 
-    <div id="game-over">
-      <h2>Game over</h2>
-      <button id="btn-reset">Play again</button>
+    <div class="modal" id="modal">
+      <div class="modal-background"></div>
+      <div class="modal-content" id="modal-content"></div>
+      <img src="./img/kanye.svg" id="kanye-face">
     </div>
 
     <script src="../dist/index.js"></script>
