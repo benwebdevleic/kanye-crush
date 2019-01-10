@@ -218,8 +218,6 @@ const init = (cb) => {
 
     cb()
   })
-
-  // audio.load('silence', './audio/silence.mp3')
 }
 
 /**
@@ -645,7 +643,10 @@ const update = () => {
   removeTiles(matches)
   dropTiles()
   fillEmptyCells()
-  return tilesDidMove
+  return {
+    tilesDidMove,
+    matches
+  }
 }
 
 const reset = () => {

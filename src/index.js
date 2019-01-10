@@ -97,9 +97,11 @@ const hideIntro = () => {
   ui.stateContainer.appendChild(ui.intro)
 }
 
-const updateGameState = (shouldUpdate) => {
+const updateGameState = (updateData) => {
 
-  if (!shouldUpdate) {
+  const gameInPlay = updateData.tilesDidMove || updateData.matches.length
+
+  if (gameInPlay) {
     return
   }
 
@@ -127,9 +129,9 @@ const updateGameState = (shouldUpdate) => {
 
 const main = () => {
   requestAnimationFrame(main)
-  const tilesMoved = grid.update()
+  const didUpdate = grid.update()
   grid.render()
-  updateGameState(!tilesMoved)
+  updateGameState(didUpdate)
 }
 
 const resetScore = () => {
