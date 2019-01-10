@@ -2,6 +2,7 @@ import { gravity, map, hasGravity } from './environment'
 import { Tile } from './tile'
 import { preloadImages } from './image-preloader'
 import { sendEvent } from './party'
+import * as audio from './audio'
 
 const canvas = document.getElementById('grid')
 const ctx = canvas.getContext('2d')
@@ -75,8 +76,6 @@ const handleMouseMove = function(event) {
         // swap the tiles
         swappingTiles.push({ row: draggingTile.row, col: draggingTile.col })
         swappingTiles.push({ row: cellRow, col: cellCol })
-
-        // sendEvent('movemade')
       }
     }
 }
@@ -90,6 +89,7 @@ const handleMouseMove = function(event) {
  * @return {void}
  */
 const handleMouseDown = function(event) {
+  // audio.play('silence') // hack to get audio working on mobile
   dragging = true
 
   const { mouseX, mouseY } = getEventCoordinates(event)
@@ -160,7 +160,7 @@ const render = () => {
 const clearNonUserMatches = () => {
   let matches = getMatches(true)
   while(matches.length) {
-    removeTiles(matches)
+    removeTiles(matches, false)
     dropTiles()
     fillEmptyCells()
     updateTiles(false)
@@ -218,6 +218,8 @@ const init = (cb) => {
 
     cb()
   })
+
+  // audio.load('silence', './audio/silence.mp3')
 }
 
 /**
@@ -442,12 +444,14 @@ const getMatches = (shouldGetMatches) => {
  * @param  {Object} list list of tiles that need to be removed
  * @return {void}
  */
-const removeTiles = list => {
+const removeTiles = (list, shouldSendEvent = true) => {
   if (list.length) {
     list.forEach(match => {
       grid[match.row][match.col] = null
     })
-    sendEvent("tilesremoved", list.length)
+    if (shouldSendEvent) {
+      sendEvent("tilesremoved", list.length)
+    }
   }
 }
 
@@ -641,6 +645,7 @@ const update = () => {
   removeTiles(matches)
   dropTiles()
   fillEmptyCells()
+  return tilesDidMove
 }
 
 const reset = () => {

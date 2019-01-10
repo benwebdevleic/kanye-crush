@@ -1,12 +1,16 @@
 import * as grid from './grid'
 import { bindEvent, sendEvent } from './party'
+import * as kanye from './kanye'
+import * as audio from './audio'
 
 var defaultScore = 0
 var defaultMoves = 6
 
-var target = 560
+var target = 1000
 var score = defaultScore
 var moves = defaultMoves
+
+var backgroundMusic
 
 /**
  * The game's current state
@@ -27,9 +31,11 @@ const ui = {
   modal: document.getElementById('modal'),
   modalContent: document.getElementById('modal-content'),
   stateContainer: document.getElementById('game-state-containers'),
+  intro: document.getElementById('game-intro')
 }
 
 const handleTilesRemoved = event => {
+  kanye.offerOpinion()
   const numTilesRemoved = event.detail
   const pointsToBeAdded = numTilesRemoved * 60
   score += pointsToBeAdded
@@ -64,6 +70,11 @@ const showWin = () => {
     return
   }
 
+  backgroundMusic.pause()
+  backgroundMusic.currentTime = 0
+  kanye.congratulate()
+  audio.play('celebration-background')
+
   ui.modalContent.appendChild(ui.gameWin)
   ui.modal.classList.add("show")
 }
@@ -71,9 +82,26 @@ const showWin = () => {
 const hideWin = () => {
   ui.modal.classList.remove("show")
   ui.stateContainer.appendChild(ui.gameWin)
+  kanye.shutUp()
+  audio.stop('celebration-background')
+  backgroundMusic.play()
 }
 
-const updateGameState = () => {
+const showIntro = () => {
+  ui.modalContent.appendChild(ui.intro)
+  ui.modal.classList.add("show")
+}
+
+const hideIntro = () => {
+  ui.modal.classList.remove("show")
+  ui.stateContainer.appendChild(ui.intro)
+}
+
+const updateGameState = (shouldUpdate) => {
+
+  if (!shouldUpdate) {
+    return
+  }
 
   // playing
   if (score < target && moves > 0) {
@@ -99,9 +127,9 @@ const updateGameState = () => {
 
 const main = () => {
   requestAnimationFrame(main)
-  updateGameState()
-  grid.update()
+  const tilesMoved = grid.update()
   grid.render()
+  updateGameState(!tilesMoved)
 }
 
 const resetScore = () => {
@@ -121,7 +149,22 @@ const init = () => {
   ui.btnRetry.forEach(el => {
     el.addEventListener('click', handleBtnReset)
   })
-  grid.init(main)
+
+  const startBtn = document.getElementById('start')
+  backgroundMusic = new Audio('./audio/tension-bed.mp3')
+  backgroundMusic.loop = true
+  backgroundMusic.addEventListener('canplaythrough', function() {
+    startBtn.classList.add('show')
+  })
+  startBtn.addEventListener('click', function() {
+    hideIntro()
+    grid.init(main)
+    backgroundMusic.play()
+  })
+
+  audio.load('celebration-background', './audio/celebration-background.mp3', 0.4, true)
+
+  showIntro()
 }
 
 const reset = () => {

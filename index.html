@@ -228,6 +228,28 @@
         }
       }
 
+      #start {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        margin-left: -35px;
+      }
+
+      #start.show {
+        /*position: absolute;
+        left: 0;
+        top: 0;
+        line-height: 44px;
+        padding: 0 20px;
+        font-size: 1rem;
+        display: block;*/
+      }
+
+      #game-intro {
+        position: relative;
+        min-height: 200px;
+      }
+
     </style>
 
   </head>
@@ -274,8 +296,11 @@
         <h2>You Won!</h2>
         <h3>Score</h3>
         <div class="score-value"></div>
-        <button class="btn-retry">Retry</button>
-        <button>Next</button>
+        <button class="btn-retry">Play again</button>
+      </div>
+
+      <div id="game-intro">
+        <button id="start">Start</button>
       </div>
 
     </div>
