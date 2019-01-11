@@ -19,27 +19,30 @@ const play = name => {
 }
 
 const load = (name, file, volume, loop = false) => {
-  files[name] = {
-    el: new Audio(),
-    playing: false
-  }
-  const src = document.createElement('source')
-  src.type = 'audio/mpeg'
-  src.src = file
-  files[name].el.appendChild(src)
-
-  if (volume) {
-    files[name].el.volume = volume
-  }
-
-  files[name].el.loop = loop
-
-  files[name].el.addEventListener('ended', function() {
-    if (this.loop) {
-      this.play()
-    } else {
-      files[name].playing = false
+  return new Promise(function(resolve, reject) {
+    files[name] = {
+      el: new Audio(),
+      playing: false
     }
+    files[name].el.addEventListener('load', resolve)
+    const src = document.createElement('source')
+    src.type = 'audio/mpeg'
+    src.src = file
+    files[name].el.appendChild(src)
+
+    if (volume) {
+      files[name].el.volume = volume
+    }
+
+    files[name].el.loop = loop
+
+    files[name].el.addEventListener('ended', function() {
+      if (this.loop) {
+        this.play()
+      } else {
+        files[name].playing = false
+      }
+    })
   })
 }
 
