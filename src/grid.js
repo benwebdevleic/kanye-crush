@@ -1,11 +1,9 @@
-import { gravity, map, hasGravity } from './environment'
+import { gravity, map, hasGravity, canvas, ctx } from './environment'
 import { Tile } from './tile'
 import { preloadImages } from './image-preloader'
 import { sendEvent } from './party'
 import * as audio from './audio'
-
-const canvas = document.getElementById('grid')
-const ctx = canvas.getContext('2d')
+import { images } from './images'
 
 var numRows
 var numColumns
@@ -49,6 +47,10 @@ const getEventCoordinates = event => {
     mouseX,
     mouseY,
   }
+}
+
+const objectIsInArray = (obj, arr) => {
+  return arr.some(i => JSON.stringify(i) === JSON.stringify(obj))
 }
 
 /**
@@ -147,7 +149,7 @@ const render = () => {
   parseGrid((row, col, value) => {
 
     if (tileInCell(row, col)) {
-      grid[row][col].render(ctx)
+      grid[row][col].render()
     }
   })
 }
@@ -198,26 +200,22 @@ const init = (cb) => {
   canvas.addEventListener("touchmove", handleMouseMove)
   canvas.addEventListener("touchend", handleMouseUp)
 
-  const imageURLs = [
-    './img/coin-gold.png',
-    './img/coin-silver.png',
-    './img/coin-bronze.png',
-    './img/coin-pink.png',
-    './img/coin-green.png',
-    './img/coin-red.png',
+  tileImages = [
+    images['coin-gold'],
+    images['coin-silver'],
+    images['coin-bronze'],
+    images['coin-pink'],
+    images['coin-green'],
+    images['coin-red'],
   ]
 
-  preloadImages(imageURLs, (loadedImages) => {
-    tileImages = loadedImages
+  // create a grid of tiles
+  createGrid(map)
 
-    // create a grid of tiles
-    createGrid(map)
+  // clear matches accidentally created
+  clearNonUserMatches()
 
-    // clear matches accidentally created
-    clearNonUserMatches()
-
-    cb()
-  })
+  cb()
 }
 
 /**
@@ -418,17 +416,29 @@ const getMatches = (shouldGetMatches) => {
       //check horizontal
       if ((getCellValue(row, col + 1) > -1 && getCellValue(row, col + 1) === getCellValue(row, col)) &&
           (getCellValue(row, col + 2) > -1 && getCellValue(row, col + 2) === getCellValue(row, col))) {
-            matches.push({ row: row, col: col })
-            matches.push({ row: row, col: col + 1 })
-            matches.push({ row: row, col: col + 2 })
+            if (!objectIsInArray({ row: row, col: col }, matches)) {
+              matches.push({ row: row, col: col })
+            }
+            if (!objectIsInArray({ row: row, col: col + 1 }, matches)) {
+              matches.push({ row: row, col: col + 1 })
+            }
+            if (!objectIsInArray({ row: row, col: col + 2 }, matches)) {
+              matches.push({ row: row, col: col + 2 })
+            }
       }
 
       //check vertical
       if ((getCellValue(row + 1, col) > -1 && getCellValue(row + 1, col) === getCellValue(row, col)) &&
           (getCellValue(row + 2, col) > -1 && getCellValue(row + 2, col) === getCellValue(row, col))) {
-            matches.push({ row: row, col: col })
-            matches.push({ row: row + 1, col: col })
-            matches.push({ row: row + 2, col: col })
+            if (!objectIsInArray({ row: row, col: col }, matches)) {
+              matches.push({ row: row, col: col })
+            }
+            if (!objectIsInArray({ row: row + 1, col: col }, matches)) {
+              matches.push({ row: row + 1, col: col })
+            }
+            if (!objectIsInArray({ row: row + 2, col: col }, matches)) {
+              matches.push({ row: row + 2, col: col })
+            }
       }
     }
   })
@@ -444,12 +454,23 @@ const getMatches = (shouldGetMatches) => {
  */
 const removeTiles = (list, shouldSendEvent = true) => {
   if (list.length) {
-    list.forEach(match => {
-      grid[match.row][match.col] = null
+    list.forEach((match, index) => {
+      if (shouldSendEvent) {
+
+        const finishedRemoving = grid[match.row][match.col].remove()
+
+        if (finishedRemoving) {
+          grid[match.row][match.col] = null
+
+          // if the last in the list has finished being removed
+          if (index === list.length - 1) {
+            sendEvent("tilesremoved", list.length)
+          }
+        }
+      } else {
+        grid[match.row][match.col] = null
+      }
     })
-    if (shouldSendEvent) {
-      sendEvent("tilesremoved", list.length)
-    }
   }
 }
 

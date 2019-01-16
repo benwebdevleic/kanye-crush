@@ -2,6 +2,7 @@ import * as grid from './grid'
 import * as party from './party'
 import * as audio from './audio'
 import * as kanye from './kanye'
+import { preloadImages } from './image-preloader.js'
 
 var defaultScore = 0
 var defaultMoves = 6
@@ -94,7 +95,7 @@ const lose = () => {
 
 const preload = () => {
 
-  const files = [
+  const audioFiles = [
     {
       name: 'yo',
       file: './audio/yo.mp3',
@@ -133,16 +134,47 @@ const preload = () => {
     }
   ]
 
-  let promises = files.map(function(asset, index) {
+  //load audio files
+  const imageFiles = [
+    {
+      name: 'coin-gold',
+      file: './img/coin-gold.png'
+    },
+    {
+      name: 'coin-silver',
+      file: './img/coin-silver.png'
+    },
+    {
+      name: 'coin-bronze',
+      file: './img/coin-bronze.png'
+    },
+    {
+      name: 'coin-pink',
+      file: './img/coin-pink.png'
+    },
+    {
+      name: 'coin-green',
+      file: './img/coin-green.png'
+    },
+    {
+      name: 'coin-red',
+      file: './img/coin-red.png'
+    },
+    {
+      name: 'sprite-explosion',
+      file: './img/sprite-explosion.png'
+    }
+  ]
+
+  let promises = audioFiles.map(function(asset, index) {
     audio.load(asset.name, asset.file, asset.volume, asset.loop)
   })
 
   Promise.all(promises).then(() => {
-    party.sendEvent('assetsloaded')
+    preloadImages(imageFiles, () => {
+      party.sendEvent('assetsloaded')
+    })
   })
-
-  //load audio files
-
 }
 
 const reset = () => {

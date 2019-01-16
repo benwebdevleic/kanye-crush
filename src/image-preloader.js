@@ -1,14 +1,15 @@
-const preloadImages = (imageURLs, cb) => {
-  let images = []
+import { images } from './images'
 
-  let promises = imageURLs.map(function(val, index) {
+const preloadImages = (imageList, cb) => {
+
+  let promises = imageList.map(function(img, index) {
     return new Promise(function(resolve, reject) {
-      images[index] = new Image()
-      images[index].onload = resolve
-      images[index].onerror = function(error) {
+      images[img.name] = new Image()
+      images[img.name].onload = resolve
+      images[img.name].onerror = function(error) {
         console.log("error", error)
       }
-      images[index].src = val
+      images[img.name].src = img.file
     })
   })
 

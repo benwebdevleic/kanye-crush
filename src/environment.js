@@ -21,7 +21,12 @@ const map = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1],
 ]
 
+const canvas = document.getElementById('grid')
+const ctx = canvas.getContext('2d')
+
 export {
   gravity,
   map,
+  canvas,
+  ctx,
 }

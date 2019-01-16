@@ -1,3 +1,5 @@
+import { ctx } from './environment'
+
 /**
  * Display an animated sprite
  *
@@ -46,9 +48,11 @@ class Sprite {
       this.col = this.frameIndex - this.row * this.numCols
     }
 
-    if (this.frameIndex >= this.numberOfFrames) {
-      this.frameIndex = 0
-    }
+    // if (this.frameIndex >= this.numberOfFrames) {
+    //   this.frameIndex = 0
+    // }
+
+    return this.frameIndex === this.numberOfFrames - 1
   }
 
   /**
@@ -69,4 +73,8 @@ class Sprite {
     // draw the image
     ctx.drawImage(this.img, sX, sY, sWidth, sHeight, dX, dY, dWidth, dHeight)
   }
+}
+
+export {
+  Sprite
 }

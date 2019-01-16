@@ -1,4 +1,7 @@
 import { easeInQuad } from './utils'
+import { Sprite } from './sprite'
+import { images } from './images'
+import { ctx } from './environment'
 
 class Tile {
   constructor(value, x, y, w, h, img) {
@@ -10,6 +13,9 @@ class Tile {
     this.img = img
     this.vy = 0
     this.terminalvy = 10
+
+    this.removeAnimationSpriteImage = images['sprite-explosion']
+    this.removeAnimationSprite
   }
 
   /**
@@ -60,8 +66,10 @@ class Tile {
    * @param  {Object} ctx The canvas on which to draw the tile image
    * @return {void}
    */
-  render(ctx) {
-    ctx.drawImage(this.img, this.x, this.y, this.w, this.h)
+  render() {
+    if (this.removeAnimationSprite === undefined) {
+      ctx.drawImage(this.img, this.x, this.y, this.w, this.h)
+    }
   }
 
   /**
@@ -117,6 +125,26 @@ class Tile {
     } else {
       this.y = Math.max(tiley, tileYEnd)
     }
+  }
+
+  remove() {
+
+    // create a sprite instance
+    if (this.removeAnimationSprite === undefined) {
+      this.removeAnimationSprite = new Sprite(this.removeAnimationSpriteImage, {
+        w: 55,
+        h: 55,
+        x: this.x,
+        y: this.y,
+        numRows: 8,
+        numCols: 8
+      })
+    }
+
+    const lastFrame = this.removeAnimationSprite.update()
+    this.removeAnimationSprite.render()
+
+    return lastFrame
   }
 }
 
