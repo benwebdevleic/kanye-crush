@@ -250,15 +250,37 @@
       .kanye-face-full {
         position: absolute;
         right: 23px;
-        bottom: 21px;
+        bottom: 15px;
         width: 92px;
+        height: 142px;
+        overflow: hidden;
+      }
+
+      .kanye-face-sprite {
+        width: 184px;
         height: auto;
+      }
+
+      .kanye-face-full.speak .kanye-face-sprite {
+        margin-left: -92px;
       }
 
       @media screen and (min-width: 992px) {
         .kanye-face-full {
           position: static;
           margin-top: 10px;
+          margin-right: auto;
+          margin-left: auto;
+          width: 125px;
+          height: 194px;
+        }
+
+        .kanye-face-sprite {
+          width: 250px;
+        }
+
+        .kanye-face-full.speak .kanye-face-sprite {
+          margin-left: -125px;
         }
       }
 
@@ -270,7 +292,9 @@
     <div class="wrapper">
 
       <div class="multi-column columns-3 align-center tablet-and-smaller" id="player-info">
-        <img src="./img/kanye-full.svg" width="251" height="365" class="kanye-face-full">
+        <div class="kanye-face-full">
+          <img src="./img/kanye-sprite.png" width="500" height="387" class="kanye-face-sprite">
+        </div>
         <h1 id="logo"><span class="first-letter">K</span>anye <span class="first-letter">C</span>rush</h1>
         <div class="column">
           <div class="player-info-component">

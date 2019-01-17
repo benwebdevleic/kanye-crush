@@ -12,13 +12,12 @@ const loadPhraseAudio = phrase => {
 const offerOpinion = () => {
   const choice = Math.floor(Math.random() * opinionPhrases.length)
 
-  // attempt to play the audio file
-  const played = audio.play(opinionPhrases[choice])
+  party.sendEvent('kanyespeakingstart')
 
-  // if the audio file was already being played, try again
-  if (!played) {
-    // offerOpinion()
-  }
+  // attempt to play the audio file
+  audio.play(opinionPhrases[choice]).then(() => {
+    party.sendEvent('kanyespeakingstop')
+  })
 }
 
 const congratulate = () => {
@@ -27,7 +26,12 @@ const congratulate = () => {
   opinionPhrases.forEach(phrase => audio.stop(phrase))
 
   const choice = Math.floor(Math.random() * congratulationPhrases.length)
-  audio.play(congratulationPhrases[choice])
+
+  party.sendEvent('kanyespeakingstart')
+
+  audio.play(congratulationPhrases[choice]).then(() => {
+    party.sendEvent('kanyespeakingstop')
+  })
 }
 
 const shutUp = () => {
@@ -37,6 +41,7 @@ const shutUp = () => {
   congratulationPhrases.forEach(phrase => {
       audio.stop(phrase)
   })
+  party.sendEvent('kanyespeakingstop')
 }
 
 const init = () => {

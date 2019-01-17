@@ -1,21 +1,28 @@
 let files = {}
 
-const play = name => {
+const play = (name, p) => {
   if (files[name].playing) {
     return false
   }
 
-  const playPromise = files[name].el.play()
+  const pr = new Promise((resolve, reject) => {
+    const playPromise = files[name].el.play()
 
-  if (playPromise !== null) {
-    playPromise.catch(err => {
-      console.log('problem playing audio', err)
+    if (playPromise !== null) {
+      playPromise.catch(err => {
+        console.log('problem playing audio', err)
+      })
+
+      files[name].playing = true
+    }
+
+    files[name].el.addEventListener('ended', () => {
+      console.log('audio playing ended', p)
+      resolve()
     })
-  }
+  })
 
-  files[name].playing = true
-
-  return true
+  return pr
 }
 
 const load = (name, file, volume, loop = false) => {

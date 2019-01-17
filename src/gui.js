@@ -11,6 +11,7 @@ const modalContent = document.getElementById('modal-content')
 const stateContainer = document.getElementById('game-state-containers')
 const intro = document.getElementById('game-intro')
 const startBtn = document.getElementById('start')
+const kanye = document.querySelector('.kanye-face-full')
 
 var backgroundMusic
 
@@ -72,6 +73,18 @@ const resetGameUI = () => {
   hideLose()
 }
 
+const kanyeSpeak = () => {
+
+  //shut kanye up before starting to speak
+  kanyeStopSpeaking()
+
+  kanye.classList.add('speak')
+}
+
+const kanyeStopSpeaking = () => {
+  kanye.classList.remove('speak')
+}
+
 const init = () => {
   console.log('gui.init()')
   party.bindEvent('gamewin', showWin)
@@ -80,6 +93,8 @@ const init = () => {
   party.bindEvent('scoredidchange', renderScore)
   party.bindEvent('targetdidchange', renderTarget)
   party.bindEvent('gamereset', resetGameUI)
+  party.bindEvent('kanyespeakingstart', kanyeSpeak)
+  party.bindEvent('kanyespeakingstop', kanyeStopSpeaking)
 
   showIntro()
 

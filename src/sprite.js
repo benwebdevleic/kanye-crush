@@ -24,7 +24,7 @@ class Sprite {
 
     this.row = 0
     this.col = 0
-    this.targetFrameRate = 24
+    this.targetFrameRate = 60
     this.frameRate = 60
     this.tickCount = 0
     this.frameIndex = 0
