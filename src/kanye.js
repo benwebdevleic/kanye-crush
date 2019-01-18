@@ -10,7 +10,11 @@ const loadPhraseAudio = phrase => {
 }
 
 const offerOpinion = () => {
-  const choice = Math.floor(Math.random() * opinionPhrases.length)
+  let choice = Math.floor(Math.random() * opinionPhrases.length)
+
+  while (opinionPhrases[choice].playing === true) {
+    choice = Math.floor(Math.random() * opinionPhrases.length)
+  }
 
   party.sendEvent('kanyespeakingstart')
 

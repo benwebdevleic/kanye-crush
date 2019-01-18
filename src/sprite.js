@@ -23,11 +23,9 @@ class Sprite {
     this.numRows = opts.numRows
     this.row = 0
     this.col = 0
-    this.targetFrameRate = 24
-    // this.frameRate = 60
+    this.targetFrameRate = 30
     this.tickCount = 0
     this.frameIndex = 0
-    // this.ticksPerFrame = Math.floor(this.frameRate / this.targetFrameRate)
     this.ticksPerFrame = Math.floor(fps / this.targetFrameRate)
     this.numberOfFrames = this.numCols * this.numRows
   }

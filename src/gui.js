@@ -2,7 +2,7 @@ import * as party from './party'
 
 const score = document.querySelectorAll('.score-value')
 const moves = document.getElementById('moves-value')
-const target = document.getElementById('target-value')
+const target = document.querySelectorAll('.target-value')
 const gameLose = document.getElementById('game-lose')
 const gameWin = document.getElementById('game-win')
 const btnRetry = document.querySelectorAll('.btn-retry')
@@ -40,9 +40,8 @@ const hideWin = () => {
 }
 
 const showLose = () => {
-  if (state !== "lose") {
-    return
-  }
+  backgroundMusic.pause()
+  backgroundMusic.currentTime = 0
 
   modalContent.appendChild(gameLose)
   modal.classList.add("show")
@@ -51,22 +50,16 @@ const showLose = () => {
 const hideLose = () => {
   modal.classList.remove("show")
   stateContainer.appendChild(gameLose)
+  backgroundMusic.play()
 }
 
-const renderMoves = val => {
-  moves.innerHTML = val
-}
+const renderMoves = val => moves.innerHTML = val
 
-const renderScore = val => {
-  score.forEach(el => {
-    el.innerHTML = val
-  })
-  // score.innerHTML = val
-}
+const renderScore = val =>
+  score.forEach(el => el.innerHTML = val)
 
-const renderTarget = val => {
-  target.innerHTML = val
-}
+const renderTarget = val =>
+  target.forEach(el => el.innerHTML = val)
 
 const resetGameUI = () => {
   hideWin()

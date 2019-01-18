@@ -8,7 +8,7 @@ import * as environment from './environment'
 var defaultScore = 0
 var defaultMoves = 6
 
-var target = 1000
+var target = 5000
 var score = defaultScore
 var moves = defaultMoves
 
@@ -100,6 +100,7 @@ const lose = () => {
 }
 
 const preload = () => {
+  console.log('game.preload()')
 
   const audioFiles = [
     {

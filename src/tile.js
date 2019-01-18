@@ -135,9 +135,9 @@ class Tile {
       this.removeAnimationSprite = new Sprite(this.removeAnimationSpriteImage, {
         w: 128,
         h: 128,
-        x: this.x - 32,
-        y: this.y - 32,
-        numRows: 3,
+        x: this.x + (this.w / 2) - (128 / 2),
+        y: this.y + (this.h / 2) - (128 / 2),
+        numRows: 2,
         numCols: 8
       })
 

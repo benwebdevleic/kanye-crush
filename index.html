@@ -311,7 +311,7 @@
         <div class="column">
           <div class="player-info-component">
             <span class="label">Target:</span>
-            <span id="target-value"></span>
+            <span class="target-value"></span>
           </div>
         </div>
       </div>
@@ -325,12 +325,18 @@
     <div id="game-state-containers">
 
       <div id="game-lose">
-        <h2>Game over</h2>
+        <h2>You lost</h2>
+        <h3>Target</h3>
+        <div class="target-value"></div>
+        <h3>Score</h3>
+        <div class="score-value"></div>
         <button class="btn-retry">Retry</button>
       </div>
 
       <div id="game-win">
         <h2>You Won!</h2>
+        <h3>Target</h3>
+        <div class="target-value"></div>
         <h3>Score</h3>
         <div class="score-value"></div>
         <button class="btn-retry">Play again</button>
@@ -345,7 +351,6 @@
     <div class="modal" id="modal">
       <div class="modal-background"></div>
       <div class="modal-content" id="modal-content"></div>
-      <img src="./img/kanye.svg" id="kanye-face">
     </div>
 
     <script src="./dist/index.js"></script>
