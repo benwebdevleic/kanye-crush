@@ -2,6 +2,7 @@ import { easeInQuad } from './utils'
 import { Sprite } from './sprite'
 import { images } from './images'
 import { ctx } from './environment'
+import * as audio from './audio'
 
 class Tile {
   constructor(value, x, y, w, h, img) {
@@ -14,7 +15,7 @@ class Tile {
     this.vy = 0
     this.terminalvy = 10
 
-    this.removeAnimationSpriteImage = images['sprite-explosion']
+    this.removeAnimationSpriteImage = images['sprite-smoke']
     this.removeAnimationSprite
   }
 
@@ -132,13 +133,15 @@ class Tile {
     // create a sprite instance
     if (this.removeAnimationSprite === undefined) {
       this.removeAnimationSprite = new Sprite(this.removeAnimationSpriteImage, {
-        w: 55,
-        h: 55,
-        x: this.x,
-        y: this.y,
-        numRows: 8,
+        w: 128,
+        h: 128,
+        x: this.x - 32,
+        y: this.y - 32,
+        numRows: 3,
         numCols: 8
       })
+
+      audio.play('pop')
     }
 
     const lastFrame = this.removeAnimationSprite.update()

@@ -17,7 +17,6 @@ const play = (name, p) => {
     }
 
     files[name].el.addEventListener('ended', () => {
-      console.log('audio playing ended', p)
       resolve()
     })
   })

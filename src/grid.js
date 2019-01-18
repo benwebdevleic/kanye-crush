@@ -461,12 +461,13 @@ const removeTiles = (list, shouldSendEvent = true) => {
 
         if (finishedRemoving) {
           grid[match.row][match.col] = null
-
-          // if the last in the list has finished being removed
-          if (index === list.length - 1) {
-            sendEvent("tilesremoved", list.length)
-          }
         }
+
+        // if every match has been removed, trigger the event to state this
+        if (list.every(match => grid[match.row][match.col] === null)) {
+          sendEvent("tilesremoved", list.length)
+        }
+
       } else {
         grid[match.row][match.col] = null
       }

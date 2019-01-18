@@ -1,4 +1,4 @@
-import { ctx } from './environment'
+import { ctx, fps } from './environment'
 
 /**
  * Display an animated sprite
@@ -21,14 +21,14 @@ class Sprite {
     this.y = opts.y
     this.numCols = opts.numCols
     this.numRows = opts.numRows
-
     this.row = 0
     this.col = 0
-    this.targetFrameRate = 60
-    this.frameRate = 60
+    this.targetFrameRate = 24
+    // this.frameRate = 60
     this.tickCount = 0
     this.frameIndex = 0
-    this.ticksPerFrame = this.frameRate / this.targetFrameRate
+    // this.ticksPerFrame = Math.floor(this.frameRate / this.targetFrameRate)
+    this.ticksPerFrame = Math.floor(fps / this.targetFrameRate)
     this.numberOfFrames = this.numCols * this.numRows
   }
 
@@ -38,19 +38,18 @@ class Sprite {
    * @return {void}
    */
   update() {
-    this.tickCount += 1
+
+    this.ticksPerFrame = Math.floor(fps / this.targetFrameRate)
 
     if (this.tickCount > this.ticksPerFrame) {
       this.tickCount = 0
       this.frameIndex += 1
 
-      this.row = Math.floor(this.frameIndex / this.numRows)
+      this.row = Math.floor(this.frameIndex / this.numCols)
       this.col = this.frameIndex - this.row * this.numCols
     }
 
-    // if (this.frameIndex >= this.numberOfFrames) {
-    //   this.frameIndex = 0
-    // }
+    this.tickCount += 1
 
     return this.frameIndex === this.numberOfFrames - 1
   }

@@ -3,6 +3,7 @@ import * as party from './party'
 import * as audio from './audio'
 import * as kanye from './kanye'
 import { preloadImages } from './image-preloader.js'
+import * as environment from './environment'
 
 var defaultScore = 0
 var defaultMoves = 6
@@ -30,8 +31,13 @@ const start = () => {
   party.sendEvent('targetdidchange', target)
 }
 
+var lastLoopTimestamp = new Date()
+
 const main = () => {
   requestAnimationFrame(main)
+  var thisLoopTimeStamp = new Date()
+  environment.setFps(1000 / (thisLoopTimeStamp - lastLoopTimestamp))
+  lastLoopTimestamp = thisLoopTimeStamp
   const didUpdate = grid.update()
   grid.render()
   updateGameState(didUpdate)
@@ -131,6 +137,12 @@ const preload = () => {
       file: './audio/celebration-background.mp3',
       volume: 0.4,
       loop: true
+    },
+    {
+      name: 'pop',
+      file: './audio/pop.ogg',
+      volume: 1,
+      loop: false
     }
   ]
 
@@ -161,8 +173,8 @@ const preload = () => {
       file: './img/coin-red.png'
     },
     {
-      name: 'sprite-explosion',
-      file: './img/sprite-explosion.png'
+      name: 'sprite-smoke',
+      file: './img/sprite-smoke-cropped.png'
     }
   ]
 

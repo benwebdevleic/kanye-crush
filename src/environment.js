@@ -24,9 +24,17 @@ const map = [
 const canvas = document.getElementById('grid')
 const ctx = canvas.getContext('2d')
 
+let fps
+
+const setFps = val => {
+  fps = val
+}
+
 export {
   gravity,
   map,
   canvas,
   ctx,
+  fps,
+  setFps,
 }
