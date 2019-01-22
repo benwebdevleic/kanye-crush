@@ -6,9 +6,9 @@ import { preloadImages } from './image-preloader.js'
 import * as environment from './environment'
 
 var defaultScore = 0
-var defaultMoves = 6
+var defaultMoves = 5
 
-var target = 5000
+var target = 1200
 var score = defaultScore
 var moves = defaultMoves
 

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <link rel="manifest" href="/manifest.json">
     <title>Kanye Crush</title>
-    <!-- <link href="https://fonts.googleapis.com/css?family=Damion|Oleo+Script|Pacifico|Shrikhand" rel="stylesheet"> -->
+    <!-- <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet"> -->
 
     <style>
 
@@ -17,9 +17,6 @@
           margin: 0;
           text-align: center;
           height: 100%;
-          /*background-image: url(./img/abstract-art-astronomy-287005.jpg);
-          background-repeat: no-repeat;
-          background-size: auto 100vh;*/
           background-color: #222;
           color: #fff;
           overflow: hidden;
@@ -44,6 +41,28 @@
         position: absolute;
         top: 0;
         z-index: 1;
+      }
+
+      .kanye-intro {
+        display: block;
+        margin: 0 auto;
+        height: 50%;
+      }
+
+      @media screen and (min-width: 768px) {
+        .kanye-intro {
+          height: 33%;
+        }
+      }
+
+      @media screen and (min-width: 1200px) {
+        .kanye-intro {
+          height: 100%;
+          position: absolute;
+          left: 0;
+          top: 0;
+          transform: translateX(-50%);
+        }
       }
 
       #grid {
@@ -74,6 +93,7 @@
         border-radius: 22px;
         font-size: 1rem;
         outline: none;
+        font-family: 'Pacifico', sans-serif;
       }
 
       @media screen and (max-width: 992px) {
@@ -157,6 +177,11 @@
         background: -webkit-linear-gradient(top, #f6f8f9 0%,#e5ebee 29%,#d7dee3 63%,#f5f7f9 100%); /* Chrome10-25,Safari5.1-6 */
         background: linear-gradient(to bottom, #f6f8f9 0%,#e5ebee 29%,#d7dee3 63%,#f5f7f9 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6f8f9', endColorstr='#f5f7f9',GradientType=0 ); /* IE6-9 */
+        opacity: 0;
+      }
+
+      #player-info.show {
+        opacity: 1;
       }
 
       @media screen and (min-width: 992px) {
@@ -189,6 +214,11 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        opacity: 0;
+      }
+
+      .canvas-container.show {
+        opacity: 1;
       }
 
       @media screen and (min-width: 992px) {
@@ -236,15 +266,24 @@
       }
 
       #start {
-        position: absolute;
-        bottom: 10px;
-        left: 50%;
-        margin-left: -35px;
+
       }
 
       #game-intro {
         position: relative;
-        min-height: 200px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .game-intro-content {
+        height: calc(100vh - 200px);
+      }
+
+      @media screen and (min-width: 1200px) {
+        .game-intro-content {
+          height: 100%;
+        }
       }
 
       .kanye-face-full {
@@ -282,6 +321,74 @@
         .kanye-face-full.speak .kanye-face-sprite {
           margin-left: -125px;
         }
+      }
+
+      .fullscreen-page {
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        left: 0;
+        top: 0;
+        background-color: #222;
+        display: none;
+      }
+
+      .fullscreen-page.show {
+        display: block;
+      }
+
+      .fullscreen-content {
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+      }
+
+      .logo-img {
+        width: auto;
+        max-width: 320px;
+        height: 50%;
+        box-sizing: border-box;
+        padding-top: 25px;
+      }
+
+      @media screen and (min-width: 480px) {
+        .logo-img {
+          max-width: 380px;
+        }
+      }
+
+      .cta-container {
+        position: absolute;
+        width: 100%;
+        height: 200px;
+        left: 0;
+        bottom: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      @media screen and (min-width: 1200px) {
+        #game-intro .cta-container {
+          height: 50%;
+        }
+      }
+
+      .game-state-title {
+        font-family: 'Pacifico', cursive;
+        font-size: 36px;
+      }
+
+      .game-state-cta-container {
+        height: 120px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .game-state-attribute {
+        line-height: 44px;
+        font-size: 24px;
       }
 
     </style>
@@ -324,26 +431,32 @@
 
     <div id="game-state-containers">
 
-      <div id="game-lose">
-        <h2>You lost</h2>
-        <h3>Target</h3>
-        <div class="target-value"></div>
-        <h3>Score</h3>
-        <div class="score-value"></div>
-        <button class="btn-retry">Retry</button>
+      <div id="game-lose" class="game-state">
+        <h2 class="game-state-title">You lost</h2>
+        <div class="game-state-attribute">Target: <span class="target-value"></span></div>
+        <div class="game-state-attribute">Score: <span class="score-value"></span></div>
+        <div class="game-state-cta-container">
+          <button class="btn-retry">Retry</button>
+        </div>
       </div>
 
-      <div id="game-win">
-        <h2>You Won!</h2>
-        <h3>Target</h3>
-        <div class="target-value"></div>
-        <h3>Score</h3>
-        <div class="score-value"></div>
-        <button class="btn-retry">Play again</button>
+      <div id="game-win" class="game-state">
+        <h2 class="game-state-title">You Won!</h2>
+        <div class="game-state-attribute">Target: <span class="target-value"></span></div>
+        <div class="game-state-attribute">Score: <span class="score-value"></span></div>
+        <div class="game-state-cta-container">
+          <button class="btn-retry">Play again</button>
+        </div>
       </div>
 
       <div id="game-intro">
-        <button id="start">Start</button>
+        <div class="game-intro-content">
+          <img src="/img/kanye.svg" class="kanye-intro">
+          <img src="/img/logo.svg" class="logo-img">
+        </div>
+        <div class="cta-container">
+          <button id="start">Start game</button>
+        </div>
       </div>
 
     </div>
@@ -351,6 +464,10 @@
     <div class="modal" id="modal">
       <div class="modal-background"></div>
       <div class="modal-content" id="modal-content"></div>
+    </div>
+
+    <div class="fullscreen-page">
+      <div class="fullscreen-content"></div>
     </div>
 
     <script src="./dist/index.js"></script>

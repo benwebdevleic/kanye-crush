@@ -12,16 +12,20 @@ const stateContainer = document.getElementById('game-state-containers')
 const intro = document.getElementById('game-intro')
 const startBtn = document.getElementById('start')
 const kanye = document.querySelector('.kanye-face-full')
+const fullScreenPage = document.querySelector('.fullscreen-page')
+const fullScreenContent = document.querySelector('.fullscreen-content')
+const playerInfo = document.getElementById('player-info')
+const canvasContainer = document.querySelector('.canvas-container')
 
 var backgroundMusic
 
 const showIntro = () => {
-  modalContent.appendChild(intro)
-  modal.classList.add("show")
+  fullScreenContent.appendChild(intro)
+  fullScreenPage.classList.add("show")
 }
 
 const hideIntro = () => {
-  modal.classList.remove("show")
+  fullScreenPage.classList.remove("show")
   stateContainer.appendChild(intro)
 }
 
@@ -66,6 +70,11 @@ const resetGameUI = () => {
   hideLose()
 }
 
+const showGameGUI = () => {
+  playerInfo.classList.add('show')
+  canvasContainer.classList.add('show')
+}
+
 const kanyeSpeak = () => {
 
   //shut kanye up before starting to speak
@@ -88,6 +97,7 @@ const init = () => {
   party.bindEvent('gamereset', resetGameUI)
   party.bindEvent('kanyespeakingstart', kanyeSpeak)
   party.bindEvent('kanyespeakingstop', kanyeStopSpeaking)
+  party.bindEvent('gameshouldstart', showGameGUI)
 
   showIntro()
 
