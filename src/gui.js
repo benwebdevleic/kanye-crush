@@ -16,6 +16,8 @@ const fullScreenPage = document.querySelector('.fullscreen-page')
 const fullScreenContent = document.querySelector('.fullscreen-content')
 const playerInfo = document.getElementById('player-info')
 const canvasContainer = document.querySelector('.canvas-container')
+const onboarding = document.getElementById('game-onboarding')
+const btnConfirmOnboarding = document.getElementById('confirm-onboarding')
 
 var backgroundMusic
 
@@ -87,6 +89,22 @@ const kanyeStopSpeaking = () => {
   kanye.classList.remove('speak')
 }
 
+const showOnboarding = () => {
+  modalContent.appendChild(onboarding)
+  modal.classList.add('show')
+}
+
+const handleOnBoardingConfirm = () => {
+  modal.classList.remove('show')
+  stateContainer.appendChild(onboarding)
+  backgroundMusic.play()
+}
+
+const handleGameStart = () => {
+  showGameGUI()
+  showOnboarding()
+}
+
 const init = () => {
   console.log('gui.init()')
   party.bindEvent('gamewin', showWin)
@@ -97,7 +115,7 @@ const init = () => {
   party.bindEvent('gamereset', resetGameUI)
   party.bindEvent('kanyespeakingstart', kanyeSpeak)
   party.bindEvent('kanyespeakingstop', kanyeStopSpeaking)
-  party.bindEvent('gameshouldstart', showGameGUI)
+  party.bindEvent('gameshouldstart', handleGameStart)
 
   showIntro()
 
@@ -109,7 +127,7 @@ const init = () => {
 
   // bind the start button
   startBtn.addEventListener('click', function() {
-    backgroundMusic.play()
+    // backgroundMusic.play()
     hideIntro()
     party.sendEvent('gameshouldstart')
   })
@@ -120,6 +138,8 @@ const init = () => {
       party.sendEvent('gameshouldreset')
     })
   })
+
+  btnConfirmOnboarding.addEventListener('click', handleOnBoardingConfirm)
 }
 
 export {

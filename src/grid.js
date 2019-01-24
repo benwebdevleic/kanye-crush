@@ -1,13 +1,9 @@
-import { gravity, map, hasGravity, canvas, ctx } from './environment'
+import * as environment from './environment'
 import { Tile } from './tile'
 import { preloadImages } from './image-preloader'
 import { sendEvent } from './party'
 import * as audio from './audio'
 import { images } from './images'
-
-var numRows
-var numColumns
-var cellSize
 
 var grid = []
 
@@ -27,7 +23,7 @@ var bufferHeight
 
 var matches = []
 
-var scalingFactor = canvas.width / canvas.clientWidth
+var scalingFactor = environment.canvas.width / environment.canvas.clientWidth
 
 const getEventCoordinates = event => {
   let mouseX
@@ -67,8 +63,8 @@ const handleMouseMove = function(event) {
 
       const { mouseX, mouseY } = getEventCoordinates(event)
 
-      const cellRow = Math.floor(((mouseY * scalingFactor) + bufferHeight) / cellSize)
-      const cellCol = Math.floor((mouseX * scalingFactor) / cellSize)
+      const cellRow = Math.floor(((mouseY * scalingFactor) + bufferHeight) / environment.cellSize)
+      const cellCol = Math.floor((mouseX * scalingFactor) / environment.cellSize)
 
       // if the mouse moves to a different tile
       if (draggingTile.row !== cellRow || draggingTile.col !== cellCol) {
@@ -100,8 +96,8 @@ const handleMouseDown = function(event) {
   dragStartX = mouseX * scalingFactor
   dragStartY = mouseY * scalingFactor
 
-  draggingTile.row = Math.floor((dragStartY + bufferHeight) / cellSize)
-  draggingTile.col = Math.floor(dragStartX / cellSize)
+  draggingTile.row = Math.floor((dragStartY + bufferHeight) / environment.cellSize)
+  draggingTile.col = Math.floor(dragStartX / environment.cellSize)
 }
 
 
@@ -181,24 +177,17 @@ const clearNonUserMatches = () => {
  */
 const init = (cb) => {
 
-  let i;
-  let j;
+  environment.setCellSize(environment.canvas.width / environment.numColumns)
 
-  numRows = 9
-  numColumns = 9
+  bufferRowCount = environment.numRows
 
-  // cellSize = canvas.width / numColumns
-  cellSize = canvas.width / numColumns
+  environment.canvas.addEventListener("mousedown", handleMouseDown)
+  environment.canvas.addEventListener("mousemove", handleMouseMove)
+  environment.canvas.addEventListener("mouseup", handleMouseUp)
 
-  bufferRowCount = numRows
-
-  canvas.addEventListener("mousedown", handleMouseDown)
-  canvas.addEventListener("mousemove", handleMouseMove)
-  canvas.addEventListener("mouseup", handleMouseUp)
-
-  canvas.addEventListener("touchstart", handleMouseDown)
-  canvas.addEventListener("touchmove", handleMouseMove)
-  canvas.addEventListener("touchend", handleMouseUp)
+  environment.canvas.addEventListener("touchstart", handleMouseDown)
+  environment.canvas.addEventListener("touchmove", handleMouseMove)
+  environment.canvas.addEventListener("touchend", handleMouseUp)
 
   tileImages = [
     images['coin-gold'],
@@ -210,7 +199,7 @@ const init = (cb) => {
   ]
 
   // create a grid of tiles
-  createGrid(map)
+  createGrid(environment.map)
 
   // clear matches accidentally created
   clearNonUserMatches()
@@ -224,7 +213,7 @@ const init = (cb) => {
  * @return {void}
  */
 const clearCanvas = () => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height)
+  environment.ctx.clearRect(0, 0, environment.canvas.width, environment.canvas.height)
 }
 
 /**
@@ -332,9 +321,7 @@ const updateScore = () => {
  * @param  {Number}  col The column in the environment grid
  * @return {Boolean}
  */
-const isBufferCell = (row, col) => {
-  return map[row][col] === -1
-}
+const isBufferCell = (row, col) => environment.map[row][col] === -1
 
 /**
  * Is a cell in the environment allowed to have a tile
@@ -343,9 +330,7 @@ const isBufferCell = (row, col) => {
  * @param  {Number}  col The column in the environment grid
  * @return {Boolean}
  */
-const cellAllowedTile = (row, col) => {
-  return map[row][col] === 1
-}
+const cellAllowedTile = (row, col) => environment.map[row][col] === 1
 
 /**
  * Determine whether or not there's a cell at a location in the environment grid
@@ -354,9 +339,8 @@ const cellAllowedTile = (row, col) => {
  * @param  {Number}  col The column in the environment grid
  * @return {Boolean}
  */
-const cellExists = (row, col) => {
-  return row > -1 && row < grid.length && col > -1 && col < grid[row].length
-}
+const cellExists = (row, col) =>
+  row > -1 && row < grid.length && col > -1 && col < grid[row].length
 
 /**
  * Determine whether or not there's a tile in a cell
@@ -365,9 +349,8 @@ const cellExists = (row, col) => {
  * @param  {Number}  col The column in the environment grid
  * @return {Boolean}
  */
-const tileInCell = (row, col) => {
-  return cellExists(row, col) && grid[row][col] !== null
-}
+const tileInCell = (row, col) =>
+  cellExists(row, col) && grid[row][col] !== null
 
 /**
  * Get the value of a tile, if the cell contains a tile
@@ -376,18 +359,15 @@ const tileInCell = (row, col) => {
  * @param  {Number}  col The column in the environment grid
  * @return {Number}  Return the value of the tile if it exists, or return -1 if the cell is empty
  */
-const getCellValue = (row, col) => {
-  return tileInCell(row, col) ? grid[row][col].value : -1
-}
+const getCellValue = (row, col) =>
+  tileInCell(row, col) ? grid[row][col].value : -1
 
 /**
  * Determine whether or not tiles are currently being swapped
  *
  * @return {Boolean}
  */
-const tilesBeingSwapped = () => {
-  return swappingTiles.length > 0
-}
+const tilesBeingSwapped = () => swappingTiles.length > 0
 
 /**
  * Get matching tiles.
@@ -411,7 +391,7 @@ const getMatches = (shouldGetMatches) => {
 
   parseGrid((row, col, value) => {
 
-    if (map[row][col] === 1 && grid[row][col] !== null) {
+    if (cellAllowedTile(row, col) && tileInCell(row, col)) {
 
       //check horizontal
       if ((getCellValue(row, col + 1) > -1 && getCellValue(row, col + 1) === getCellValue(row, col)) &&
@@ -492,7 +472,7 @@ const updateTiles = (shouldAnimate) => {
   parseGrid((row, col, value) => {
     if ((isBufferCell(row, col) || cellAllowedTile(row, col)) && tileInCell(row, col)) {
 
-      const tileMoved = grid[row][col].updatePosition(row, col, gravity, shouldAnimate)
+      const tileMoved = grid[row][col].updatePosition(row, col, environment.gravity, shouldAnimate)
 
       if (!tilesDidMove && tileMoved) {
         tilesDidMove = true
@@ -543,10 +523,10 @@ const fillEmptyCells = () => {
   parseGrid((row, col, value) => {
     if (isBufferCell(row, col) && !tileInCell(row, col)) {
       const value = chooseRandomTileValue()
-      const x = col * cellSize
-      const y = row * cellSize
-      const width = cellSize
-      const height = cellSize
+      const x = col * environment.cellSize
+      const y = row * environment.cellSize
+      const width = environment.cellSize
+      const height = environment.cellSize
       grid[row][col] = new Tile(value, x, y, width, height, tileImages[value])
     }
   })
@@ -565,15 +545,15 @@ const createGrid = (cellMap) => {
   let randValue
   let x
   let y
-  const width = cellSize
-  const height = cellSize
+  const width = environment.cellSize
+  const height = environment.cellSize
 
   const numRows = cellMap.length
   const numCols = cellMap[0].length
 
   bufferHeight = cellMap.reduce((accumulator, row) => {
     if (row[0] === -1) {
-      accumulator += cellSize
+      accumulator += environment.cellSize
     }
     return accumulator
   }, 0)
@@ -583,7 +563,7 @@ const createGrid = (cellMap) => {
     // create empty row
     grid[i] = []
 
-    for (j = 0; j < numColumns; j += 1) {
+    for (j = 0; j < environment.numColumns; j += 1) {
       switch (cellMap[i][j]) {
 
         case -1:  // buffer cells - tiles should be placed in these cells but are all positioned above the visible area
@@ -591,8 +571,8 @@ const createGrid = (cellMap) => {
 
           // generate a random tile value
           randValue = chooseRandomTileValue()
-          x = j * cellSize
-          y = (i * cellSize) - bufferHeight
+          x = j * environment.cellSize
+          y = (i * environment.cellSize) - bufferHeight
 
           // create a tile in the cell
           grid[i][j] = new Tile(randValue, x, y, width, height, tileImages[randValue])
@@ -673,7 +653,7 @@ const update = () => {
 
 const reset = () => {
   grid.length = 0
-  createGrid(map)
+  createGrid(environment.map)
   clearNonUserMatches()
 }
 

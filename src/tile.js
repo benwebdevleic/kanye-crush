@@ -1,7 +1,7 @@
 import { easeInQuad } from './utils'
 import { Sprite } from './sprite'
 import { images } from './images'
-import { ctx } from './environment'
+import { canvas, ctx, numRows, numColumns } from './environment'
 import * as audio from './audio'
 
 class Tile {
@@ -17,6 +17,8 @@ class Tile {
 
     this.removeAnimationSpriteImage = images['sprite-smoke']
     this.removeAnimationSprite
+
+    this.scoreAnimationSpriteImage = images['sprite-score']
   }
 
   /**
@@ -31,18 +33,15 @@ class Tile {
   updatePosition(row, col, gravity, shouldAnimate) {
 
     const currentY = this.y
-    const targetVerticalPosition = (row * this.h) - (9 * this.h)
+    const targetVerticalPosition = (row * this.h) - (numRows * this.h)
 
     if (shouldAnimate) {
       this.vy += gravity
       this.y += Math.min(this.vy, this.terminalvy)
 
-      const bounceDampening = 6
-
       // is the tile colliding with the bottom of the grid?
-      if (this.y > 500 - (500 / 9)) {
-        this.y = 500 - (500 / 9)
-        // this.vy = -this.vy / bounceDampening
+      if (this.y > canvas.height - (500 / numRows)) {
+        this.y = canvas.height - (500 / numRows)
         this.vy = 0
       }
 
@@ -104,7 +103,7 @@ class Tile {
    */
   move(tileFrom, tileTo, duration, startSwapTime) {
 
-    const bufferHeight = this.h * 9
+    const bufferHeight = this.h * numRows
 
     let tileXStart = tileFrom.col * this.w
     let tileXEnd = tileTo.col * this.w
@@ -130,7 +129,9 @@ class Tile {
 
   remove() {
 
-    // create a sprite instance
+    audio.play('pop')
+
+    // create an instance of the smoke sprite animation
     if (this.removeAnimationSprite === undefined) {
       this.removeAnimationSprite = new Sprite(this.removeAnimationSpriteImage, {
         w: 128,
@@ -140,12 +141,24 @@ class Tile {
         numRows: 2,
         numCols: 8
       })
-
-      audio.play('pop')
     }
 
     const lastFrame = this.removeAnimationSprite.update()
     this.removeAnimationSprite.render()
+
+    if (this.scoreAnimationSprite === undefined) {
+      this.scoreAnimationSprite = new Sprite(this.scoreAnimationSpriteImage, {
+        w: 128,
+        h: 128,
+        x: this.x + (this.w / 2) - (128 / 2),
+        y: this.y + (this.h / 2) - (128 / 2),
+        numRows: 1,
+        numCols: 8,
+      })
+    }
+
+    this.scoreAnimationSprite.update()
+    this.scoreAnimationSprite.render()
 
     return lastFrame
   }

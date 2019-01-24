@@ -176,6 +176,10 @@ const preload = () => {
     {
       name: 'sprite-smoke',
       file: './img/sprite-smoke-cropped.png'
+    },
+    {
+      name: 'sprite-score',
+      file: './img/score-sprite.png'
     }
   ]
 
