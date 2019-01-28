@@ -25,6 +25,7 @@ const init = () => {
   party.bindEvent('gamewin', gameWin)
   party.bindEvent('gamelose', gameLose)
   party.bindEvent('gameshouldstart', gameStart)
+  party.bindEvent('gamereset', gameStart)
 }
 
 export {
