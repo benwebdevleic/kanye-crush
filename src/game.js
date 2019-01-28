@@ -4,6 +4,7 @@ import * as audio from './audio'
 import * as kanye from './kanye'
 import { preloadImages } from './image-preloader.js'
 import * as environment from './environment'
+import * as analytics from './analytics'
 
 var defaultScore = 0
 var defaultMoves = 5
@@ -220,6 +221,9 @@ const init = () => {
 
   // get kanye ready
   kanye.init()
+
+  // init the GA analytics
+  analytics.init()
 }
 
 export {
