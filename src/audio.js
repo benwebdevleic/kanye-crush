@@ -1,22 +1,24 @@
-let files = {}
+let audioFiles = {}
 
 const play = (name, p) => {
-  if (files[name].playing) {
-    return false
+  if (audioFiles[name].playing) {
+    return new Promise((resolve, reject) => {
+      resolve()
+    })
   }
 
   const pr = new Promise((resolve, reject) => {
-    const playPromise = files[name].el.play()
+    const playPromise = audioFiles[name].el.play()
 
     if (playPromise !== null) {
       playPromise.catch(err => {
         console.log('problem playing audio', err)
       })
 
-      files[name].playing = true
+      audioFiles[name].playing = true
     }
 
-    files[name].el.addEventListener('ended', () => {
+    audioFiles[name].el.addEventListener('ended', () => {
       resolve()
     })
   })
@@ -24,42 +26,15 @@ const play = (name, p) => {
   return pr
 }
 
-const load = (name, file, volume, loop = false) => {
-  return new Promise(function(resolve, reject) {
-    files[name] = {
-      el: new Audio(),
-      playing: false
-    }
-    files[name].el.addEventListener('load', resolve)
-    const src = document.createElement('source')
-    src.type = 'audio/mpeg'
-    src.src = file
-    files[name].el.appendChild(src)
-
-    if (volume) {
-      files[name].el.volume = volume
-    }
-
-    files[name].el.loop = loop
-
-    files[name].el.addEventListener('ended', function() {
-      if (this.loop) {
-        this.play()
-      } else {
-        files[name].playing = false
-      }
-    })
-  })
-}
-
 const stop = name => {
-  files[name].el.pause()
-  files[name].el.currentTime = 0
-  files[name].playing = false
+  audioFiles[name].el.pause()
+  audioFiles[name].el.currentTime = 0
+  audioFiles[name].playing = false
 }
 
 export {
   load,
   play,
   stop,
+  audioFiles,
 }

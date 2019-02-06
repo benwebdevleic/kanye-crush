@@ -2,14 +2,15 @@ import * as grid from './grid'
 import * as party from './party'
 import * as audio from './audio'
 import * as kanye from './kanye'
-import { preloadImages } from './image-preloader.js'
+// import { preloadImages } from './image-preloader.js'
 import * as environment from './environment'
 import * as analytics from './analytics'
+import { loadFiles } from './file-loader'
 
 var defaultScore = 0
 var defaultMoves = 5
 
-var target = 1200
+var target = 4000
 var score = defaultScore
 var moves = defaultMoves
 
@@ -34,14 +35,28 @@ const start = () => {
 
 var lastLoopTimestamp = new Date()
 
-const main = () => {
-  requestAnimationFrame(main)
+/**
+ * Calculate how much time has passed since the last time this function was
+ * called and update the FPS count
+ *
+ * @return {void}
+ */
+const updateFPS = () => {
   var thisLoopTimeStamp = new Date()
   environment.setFps(1000 / (thisLoopTimeStamp - lastLoopTimestamp))
   lastLoopTimestamp = thisLoopTimeStamp
-  const didUpdate = grid.update()
+}
+
+const main = () => {
+  requestAnimationFrame(main)
+
+  updateFPS()
+
+  const updatedGrid = grid.update()
   grid.render()
-  updateGameState(didUpdate)
+  playing(updatedGrid)
+  win(updatedGrid)
+  lose(updatedGrid)
 }
 
 const handleMoveMade = event => {
@@ -61,43 +76,33 @@ const resetScore = () => {
   party.sendEvent('scoredidchange', score)
 }
 
-const updateGameState = (updateData) => {
+const playing = updateData => {
 
   const gameInPlay = updateData.tilesDidMove || updateData.matches.length
 
-  if (gameInPlay) {
-    return
-  }
-
-  // playing
-  if (score < target && moves > 0) {
+  if (!gameInPlay && score < target && moves > 0) {
     state = "playing"
   }
+}
 
-  // win
-  else if (moves === 0 && score >= target) {
-    if (state !== "win") {
-      state = "win"
-      audio.play('celebration-background')
-      party.sendEvent('gamewin')
-    }
-  }
+const win = updateData => {
 
-  // lose
-  else if (moves === 0 && score < target) {
-    if (state !== "lose") {
-      state = "lose"
-      party.sendEvent('gamelose')
-    }
+  const gameInPlay = updateData.tilesDidMove || updateData.matches.length
+
+  if (state !== "win" && !gameInPlay && moves === 0 && score >= target) {
+    state = "win"
+    party.sendEvent('gamewin')
   }
 }
 
-const win = () => {
+const lose = updateData => {
 
-}
+  const gameInPlay = updateData.tilesDidMove || updateData.matches.length
 
-const lose = () => {
-
+  if (state !== "lose" && !gameInPlay && moves === 0 && score < target) {
+    state = "lose"
+    party.sendEvent('gamelose')
+  }
 }
 
 const preload = () => {
@@ -184,12 +189,8 @@ const preload = () => {
     }
   ]
 
-  let promises = audioFiles.map(function(asset, index) {
-    audio.load(asset.name, asset.file, asset.volume, asset.loop)
-  })
-
-  Promise.all(promises).then(() => {
-    preloadImages(imageFiles, () => {
+  loadFiles(audioFiles, 'audio').then(() => {
+    loadFiles(imageFiles, 'image').then(() => {
       party.sendEvent('assetsloaded')
     })
   })
@@ -215,6 +216,9 @@ const init = () => {
   party.bindEvent('gameshouldstart', start)
   party.bindEvent('tilesremoved', handleTilesRemoved)
   party.bindEvent('gameshouldreset', reset)
+  party.bindEvent('gamewin', () => {
+    audio.play('celebration-background')
+  })
 
   // preload images
   preload()

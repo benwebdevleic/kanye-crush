@@ -18,8 +18,19 @@ const playerInfo = document.getElementById('player-info')
 const canvasContainer = document.querySelector('.canvas-container')
 const onboarding = document.getElementById('game-onboarding')
 const btnConfirmOnboarding = document.getElementById('confirm-onboarding')
+const gameLoading = document.getElementById('game-loading')
 
 var backgroundMusic
+
+const showLoading = () => {
+  fullScreenContent.appendChild(gameLoading)
+  fullScreenPage.classList.add('show')
+}
+
+const hideLoading = () => {
+  fullScreenPage.classList.remove('show')
+  stateContainer.appendChild(gameLoading)
+}
 
 const showIntro = () => {
   fullScreenContent.appendChild(intro)
@@ -105,6 +116,11 @@ const handleGameStart = () => {
   showOnboarding()
 }
 
+const handleAssetsLoaded = () => {
+  hideLoading()
+  showIntro()
+}
+
 const init = () => {
   console.log('gui.init()')
   party.bindEvent('gamewin', showWin)
@@ -116,8 +132,9 @@ const init = () => {
   party.bindEvent('kanyespeakingstart', kanyeSpeak)
   party.bindEvent('kanyespeakingstop', kanyeStopSpeaking)
   party.bindEvent('gameshouldstart', handleGameStart)
+  party.bindEvent('assetsloaded', handleAssetsLoaded)
 
-  showIntro()
+  showLoading()
 
   backgroundMusic = new Audio('./audio/tension-bed.mp3')
   backgroundMusic.loop = true
@@ -127,7 +144,6 @@ const init = () => {
 
   // bind the start button
   startBtn.addEventListener('click', function() {
-    // backgroundMusic.play()
     hideIntro()
     party.sendEvent('gameshouldstart')
   })

@@ -1,9 +1,9 @@
 import * as environment from './environment'
 import { Tile } from './tile'
-import { preloadImages } from './image-preloader'
 import { sendEvent } from './party'
 import * as audio from './audio'
 import { images } from './images'
+import { objectIsInArray } from './utils'
 
 var grid = []
 
@@ -45,10 +45,6 @@ const getEventCoordinates = event => {
   }
 }
 
-const objectIsInArray = (obj, arr) => {
-  return arr.some(i => JSON.stringify(i) === JSON.stringify(obj))
-}
-
 /**
  * Handle the mousemove event
  *
@@ -87,7 +83,6 @@ const handleMouseMove = function(event) {
  * @return {void}
  */
 const handleMouseDown = function(event) {
-  // audio.play('silence') // hack to get audio working on mobile
   dragging = true
 
   const { mouseX, mouseY } = getEventCoordinates(event)
@@ -136,7 +131,7 @@ const parseGrid = cb => {
 }
 
 /**
- * Render the grid
+ * Render each tile in the grid
  *
  * @return {void}
  */
@@ -159,9 +154,9 @@ const clearNonUserMatches = () => {
   let matches = getMatches(true)
   while(matches.length) {
     removeTiles(matches, false)
-    dropTiles()
+    shiftTiles()
     fillEmptyCells()
-    updateTiles(false)
+    applyGravity(false)
     matches = getMatches(true)
   }
   sendEvent('resetscore')
@@ -306,7 +301,7 @@ const swapTilesBack = () => {
   }
 }
 
-const updateScore = () => {
+const moveMade = () => {
   // if tiles have just been swapped and matches were found, send an event to
   // state that a valid move was made
   if (swappedTiles.length && matches.length) {
@@ -462,7 +457,7 @@ const removeTiles = (list, shouldSendEvent = true) => {
  * drop based on forces applied. If not, tiles should snap directly to their destination
  * @return {Boolean}  Did any of the tiles move?
  */
-const updateTiles = (shouldAnimate) => {
+const applyGravity = (shouldAnimate) => {
   if (tilesBeingSwapped()) {
     return
   }
@@ -492,7 +487,7 @@ const updateTiles = (shouldAnimate) => {
  *
  * @return {void}
  */
-const dropTiles = () => {
+const shiftTiles = () => {
 
   parseGrid((row, col, value) => {
     //swap the tile in a cell with the cell below, if the cell below doesn't contain a tile
@@ -510,7 +505,7 @@ const dropTiles = () => {
   })
 
   if (emptyCellsStillBelowTiles) {
-    dropTiles()
+    shiftTiles()
   }
 }
 
@@ -595,6 +590,12 @@ const createGrid = (cellMap) => {
  */
 const chooseRandomTileValue = () => Math.floor(Math.random() * 6)
 
+
+/**
+ * Determine how many valid moves can be made
+ *
+ * @return {Number}
+ */
 const countAvailableMoves = () => {
   let count = 0
 
@@ -638,12 +639,12 @@ const countAvailableMoves = () => {
 const update = () => {
   clearCanvas()
   swapTiles()
-  const tilesDidMove = updateTiles(true)
+  const tilesDidMove = applyGravity(true)
   matches = getMatches(!tilesDidMove)
-  updateScore()
+  moveMade()
   swapTilesBack()
   removeTiles(matches)
-  dropTiles()
+  shiftTiles()
   fillEmptyCells()
   return {
     tilesDidMove,
