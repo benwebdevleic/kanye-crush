@@ -10,7 +10,7 @@ import { loadFiles } from './file-loader'
 var defaultScore = 0
 var defaultMoves = 5
 
-var target = 4000
+var target = 960
 var score = defaultScore
 var moves = defaultMoves
 

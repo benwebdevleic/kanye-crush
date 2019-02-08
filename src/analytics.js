@@ -9,7 +9,6 @@ const sendEvent = action => {
 }
 
 const gameStart = () => {
-  console.log('game start event should fire')
   sendEvent('gamestart')
 }
 
