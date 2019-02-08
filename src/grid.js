@@ -365,6 +365,48 @@ const getCellValue = (row, col) =>
 const tilesBeingSwapped = () => swappingTiles.length > 0
 
 /**
+ * Check if 3 tiles in a row have the same value
+ *
+ * Compares the 2 cells to the right of a cell
+ *
+ * @param  {Number}  row Row index
+ * @param  {Number}  col Col index
+ * @return {Boolean}
+ */
+const isMatchHorizontal = (row, col) =>
+  getCellValue(row, col + 1) > -1 && getCellValue(row, col + 1) === getCellValue(row, col) &&
+  getCellValue(row, col + 2) > -1 && getCellValue(row, col + 2) === getCellValue(row, col)
+
+/**
+ * Check if 3 tiles in a column have the same value
+ *
+ * Compares the 2 cells below the cell
+ *
+ * @param  {Number}  row Row index
+ * @param  {Number}  col Column index
+ * @return {Boolean}
+ */
+const isMatchVertical = (row, col) =>
+  getCellValue(row + 1, col) > -1 && getCellValue(row + 1, col) === getCellValue(row, col) &&
+  getCellValue(row + 2, col) > -1 && getCellValue(row + 2, col) === getCellValue(row, col)
+
+/**
+ * Add a tile to the list of matches if it's not already in it
+ *
+ * @param {Object} cell    Object containing the row and column index of the tile
+ * @param {Array} matches  List of tiles already in the list of matches
+ * @return {Array} list of matching tiles
+ */
+const addToMatchList = (cell, matches) => {
+
+  if (!objectIsInArray(cell, matches)) {
+    matches.push(cell)
+  }
+
+  return matches
+}
+
+/**
  * Get matching tiles.
  *
  * Tiles match when 3 or more tiles of the same value
@@ -389,31 +431,17 @@ const getMatches = (shouldGetMatches) => {
     if (cellAllowedTile(row, col) && tileInCell(row, col)) {
 
       //check horizontal
-      if ((getCellValue(row, col + 1) > -1 && getCellValue(row, col + 1) === getCellValue(row, col)) &&
-          (getCellValue(row, col + 2) > -1 && getCellValue(row, col + 2) === getCellValue(row, col))) {
-            if (!objectIsInArray({ row: row, col: col }, matches)) {
-              matches.push({ row: row, col: col })
-            }
-            if (!objectIsInArray({ row: row, col: col + 1 }, matches)) {
-              matches.push({ row: row, col: col + 1 })
-            }
-            if (!objectIsInArray({ row: row, col: col + 2 }, matches)) {
-              matches.push({ row: row, col: col + 2 })
-            }
+      if (isMatchHorizontal(row, col)) {
+          matches = addToMatchList({ row: row, col: col }, matches)
+          matches = addToMatchList({ row: row, col: col + 1 }, matches)
+          matches = addToMatchList({ row: row, col: col + 2 }, matches)
       }
 
       //check vertical
-      if ((getCellValue(row + 1, col) > -1 && getCellValue(row + 1, col) === getCellValue(row, col)) &&
-          (getCellValue(row + 2, col) > -1 && getCellValue(row + 2, col) === getCellValue(row, col))) {
-            if (!objectIsInArray({ row: row, col: col }, matches)) {
-              matches.push({ row: row, col: col })
-            }
-            if (!objectIsInArray({ row: row + 1, col: col }, matches)) {
-              matches.push({ row: row + 1, col: col })
-            }
-            if (!objectIsInArray({ row: row + 2, col: col }, matches)) {
-              matches.push({ row: row + 2, col: col })
-            }
+      if (isMatchVertical(row, col)) {
+        matches = addToMatchList({ row: row, col: col }, matches)
+        matches = addToMatchList({ row: row + 1, col: col }, matches)
+        matches = addToMatchList({ row: row + 2, col: col }, matches)
       }
     }
   })

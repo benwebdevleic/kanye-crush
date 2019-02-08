@@ -65,30 +65,6 @@ const loadFiles = (fileList, type) => {
       resolve(fileLists[type])
     })
   })
-
-
-
-  // let promises = fileList.map(function(file, index) {
-  //   return new Promise(fileHandlers[type])
-  //
-  //   if (type === 'image') {
-  //
-  //   }
-  //
-  //
-  //   return new Promise(function(resolve, reject) {
-  //     images[file.name] = new Image()
-  //     images[file.name].onload = resolve
-  //     images[file.name].onerror = function(error) {
-  //       console.log("error", error)
-  //     }
-  //     images[file.name].src = file.file
-  //   })
-  // })
-  //
-  // Promise.all(promises).then(function() {
-  //   cb(images)
-  // })
 }
 
 export {
